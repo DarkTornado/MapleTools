@@ -3,7 +3,7 @@
 
 ## 요약
 * [메이플스토리](https://maplestory.nexon.com/)와 관련된 잡기능 모음 앱
-* 
+
 ## 라이선스
 * [GPL 3.0](LICENSE)
 
