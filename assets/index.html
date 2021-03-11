@@ -1,0 +1,47 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no width=device-width" />
+<title>
+메이플스토리 도구
+</title>
+</head>
+<style>
+table{
+ border: 1px #FFFFFF;
+}
+td {
+ color: white;
+ width: 33%;
+ padding-top: 16%;
+ padding-bottom: 16%;
+ height: 0;
+ border: 3px solid #FFFFFF;
+}
+</style>
+<body bgcolor=#FFFFFF style="margin:0px 0px 0px 0px;">
+<div style="padding:30px 20px 20px 20px;">
+<table width=100%>
+<tr align=center>
+<td bgcolor="#8BC34A" onclick="executeFunc(0);">캐릭터<br>정보 조회</td>
+<td bgcolor="#CE93D8" onclick="executeFunc(1);">실방무<br>계산기</td>
+</tr>
+<tr align=center>
+<td bgcolor="#42A5F5" onclick="executeFunc(2);">보스 방무<br>적용 계산기</td>
+<td bgcolor="#FF80AB" onclick="executeFunc(3);">배고픈 무토<br>레시피</td>
+</tr>
+</table>
+</div>
+<hr width=95%>
+<font color=BLACK size='2px'>
+<p align=center>© 2021 Dark Tornado, All rights reserved.</p>
+</font>
+<script>
+function executeFunc(type){
+//alert(type);
+window.android.callNative(type);
+}
+</script>
+</body>
+</html>
+
