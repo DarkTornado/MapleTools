@@ -10,7 +10,7 @@
 ## 기능 목록
 * [x] 메인 화면
 * [x] 캐릭터 정보 조회
-* [ ] [실방무 계산기](https://github.com/DarkTornado/MapleIgnoreDEFCalc)
+* [x] [실방무 계산기](https://github.com/DarkTornado/MapleIgnoreDEFCalc)
 * [ ] 보스 방무 적용 계산기
 * [ ] [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회
 
