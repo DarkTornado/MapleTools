@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
                 inputCharName();
                 break;
             case 1:
+                startActivity(new Intent(this, IngDefActivity.class));
                 break;
             case 2:
                 break;
