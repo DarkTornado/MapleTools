@@ -43,6 +43,7 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, IngDefActivity.class));
                 break;
             case 2:
+                startActivity(new Intent(this, BossActivity.class));
                 break;
             case 3:
                 break;
