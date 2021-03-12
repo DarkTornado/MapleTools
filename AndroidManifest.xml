@@ -23,6 +23,13 @@
         <activity android:name=".CharActivity"
             android:label="메이플 도구 - 캐릭터 정보"
             android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".IngDefActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="메이플 도구 - 실방무 계산기" />
+        <activity android:name=".BossActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="메이플 도구 - 보스 방무 적용 계산기"/>
     </application>
 
 </manifest>
