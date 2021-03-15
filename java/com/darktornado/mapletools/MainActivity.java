@@ -18,6 +18,19 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Uri uri = Uri.parse("https://github.com/DarkTornado/MapleTools");
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 0, 0, "깃허브로 이동");
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F58801")));
