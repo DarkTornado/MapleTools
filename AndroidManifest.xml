@@ -3,16 +3,15 @@
     package="com.darktornado.mapletools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="메이플 도구"
         android:supportsRtl="true"
         android:theme="@style/Theme.MapleTools">
-        <meta-data
-            android:name="com.sec.android.support.multiwindow"
-            android:value="true" />
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,9 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CharActivity"
-            android:label="메이플 도구 - 캐릭터 정보"
-            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".CharActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="메이플 도구 - 캐릭터 정보" />
         <activity
             android:name=".IngDefActivity"
             android:configChanges="orientation|screenSize"
@@ -30,6 +30,20 @@
         <activity android:name=".BossActivity"
             android:configChanges="orientation|screenSize"
             android:label="메이플 도구 - 보스 방무 적용 계산기"/>
+        <activity android:name=".MutoActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="메이플 도구 - 배고픈 무토 레시피"/>
+        <activity android:name=".InfoActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="메이플 도구 - 앱 정보" />
+        <activity android:name=".LicenseActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="메이플 도구 - 오픈 소스 라이선스" />
+
+        <meta-data
+            android:name="com.sec.android.support.multiwindow"
+            android:value="true" />
     </application>
+
 
 </manifest>
