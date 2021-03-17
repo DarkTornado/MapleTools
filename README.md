@@ -14,7 +14,7 @@
 * [x] 보스 방무 적용 계산기
 * [x] [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회
 * [x] 앱 정보 & 라이선스 정보 화면
-* [ ] 개발자 블로그로 이동
+* [x] 개발자 블로그로 이동
 * [x] 깃허브로 이동
 
 ## 사용 라이브러리
