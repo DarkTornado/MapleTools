@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.EditText;
@@ -59,6 +62,14 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, BossActivity.class));
                 break;
             case 3:
+                startActivity(new Intent(this, MutoActivity.class));
+                break;
+            case 4:
+                startActivity(new Intent(this, InfoActivity.class));
+                break;
+            case 5:
+                Uri uri = Uri.parse("https://blog.naver.com/dt3141592");
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 break;
         }
     }
