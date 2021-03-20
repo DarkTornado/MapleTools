@@ -66,7 +66,14 @@ public class CharActivity extends Activity {
                 result.append("<tr align=center><td style='padding:4px;'><b>캐릭터</b></td><td><img src='" + img + "'></td></tr>")
                         .append("</table>");
 
-                runOnUiThread(() -> web.loadData(result.toString(), "text/html; charset=UTF-8", null));
+                runOnUiThread(() -> {
+                    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
+                        web.loadDataWithBaseURL(null, result.toString(), "text/html; charset=UTF-8", null, null);
+                    }
+                    else{
+                        web.loadData(result.toString(), "text/html; charset=UTF-8", null);
+                    }
+                });
             } catch (Exception e) {
                 toast("해당 닉네임을 가진 캐릭터를 찾을 수 없거나, 오류가 발생했어요.");
 //                toast(e.toString());
