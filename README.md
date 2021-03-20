@@ -16,5 +16,16 @@
 ## 다운로드
 * [Google Play 스토어](https://play.google.com/store/apps/details?id=com.darktornado.mapletools)
 
+## 스크린샷
+<img src="Screenshot.png">
+
+## 업데이트 내역
+
+### 버전 1.0
+* 기능 4가지 지원 (캐릭터 정보 조회, 실방무 계산기, 보스 방무 적용 계산기, 배고픈 무토 레시피 목록 조회)
+
+### 버전 1.1
+* 아드로이드 7 이상에서 캐릭터 정보 조회 기능이 정상적으로 작동하지 않는 오류 수정
+
 ## 필요 라이브러리
 * [jsoup](https://jsoup.org/) - MIT License
