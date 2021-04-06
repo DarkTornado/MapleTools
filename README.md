@@ -13,6 +13,9 @@
 * 보스 방무 적용 계산기
 * [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회
 
+## To Do
+* [ ] 주문의 흔적 계산기
+
 ## 다운로드
 * [Google Play 스토어](https://play.google.com/store/apps/details?id=com.darktornado.mapletools)
 
