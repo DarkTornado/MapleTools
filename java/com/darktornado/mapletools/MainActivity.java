@@ -22,14 +22,24 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Uri uri = Uri.parse("https://github.com/DarkTornado/MapleTools");
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        Uri uri;
+        switch (item.getItemId()){
+            case 0:
+                uri = Uri.parse("https://github.com/DarkTornado/MapleTools");
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                break;
+            case 1:
+                uri = Uri.parse("https://blog.naver.com/dt3141592");
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, 0, 0, "깃허브로 이동");
+        menu.add(0, 1, 0, "개발자 블로그");
         return true;
     }
 
@@ -65,11 +75,10 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, MutoActivity.class));
                 break;
             case 4:
-                startActivity(new Intent(this, InfoActivity.class));
+                startActivity(new Intent(this, UpgradeActivity.class));
                 break;
             case 5:
-                Uri uri = Uri.parse("https://blog.naver.com/dt3141592");
-                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                startActivity(new Intent(this, InfoActivity.class));
                 break;
         }
     }
