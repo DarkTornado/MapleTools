@@ -16,6 +16,9 @@
 ## 개발중인 기능 목록
 * [ ] [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
 
+## 변경할 기능 목록
+* [ ] 실방무 계산기 : 정수 입력 후 정수 출력 -> 실수 입력 후 실수 출력
+
 ## 다운로드
 * [Google Play 스토어](https://play.google.com/store/apps/details?id=com.darktornado.mapletools)
 
