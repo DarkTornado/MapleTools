@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
+import android.view.Gravity
 import android.widget.*
 import kotlin.math.roundToInt
 
@@ -30,7 +31,7 @@ class IngDefActivity : Activity() {
         txt1.setTextColor(Color.BLACK);
         layout.addView(txt1)
         txt2.hint = "스탯창에 표시된 방어율 무시 입력"
-        txt2.inputType = InputType.TYPE_CLASS_NUMBER
+        txt2.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
         layout.addView(txt2)
         txt3.text = "\n나머지 방무(들) : "
         txt3.textSize = 18f
@@ -48,7 +49,7 @@ class IngDefActivity : Activity() {
             if (input1.isBlank() || input2.isBlank()) {
                 toast("입력되지 않은 값이 있어요.")
             } else {
-                val result = calcIgnoreDEF(input1.toDouble(), input2).roundToInt().toString()
+                val result = calcIgnoreDEF(input1.toDouble(), input2).toString()
                 txt6.text = Editable.Factory.getInstance().newEditable(result)
                 toast("실방무 계산 결과 약 $result%인거에요.")
             }
@@ -72,6 +73,13 @@ class IngDefActivity : Activity() {
         }
         layout.addView(info)
 
+        val maker = TextView(this)
+        maker.text = "\n© 2021 Dark Tornado, All rights reserved.\n"
+        maker.textSize = 13f
+        maker.gravity = Gravity.CENTER
+        maker.setTextColor(Color.BLACK)
+        layout.addView(maker)
+
         val pad = dip2px(16)
         layout.setPadding(pad, pad, pad, pad)
         val scroll = ScrollView(this)
@@ -86,7 +94,8 @@ class IngDefActivity : Activity() {
             val diff = (100.0 - current) * (def.toDouble() / 100)
             current += diff
         }
-        return current
+        current *= 100
+        return current.roundToInt().toDouble() / 100;
     }
 
     fun showDialog(title: String, msg: String) {
@@ -100,4 +109,5 @@ class IngDefActivity : Activity() {
     fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 
     fun dip2px(dips: Int) = Math.ceil((dips * this.resources.displayMetrics.density).toDouble()).toInt()
+
 }
