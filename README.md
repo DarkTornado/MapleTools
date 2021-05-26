@@ -17,7 +17,8 @@
 * [ ] [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
 
 ## 변경할 기능 목록
-* [ ] 실방무 계산기 : 정수 입력 후 정수 출력 -> 실수 입력 후 실수 출력
+* [x] 실방무 계산기 : 소수점 아래 두 자리 까지 계산 지원.
+  * 2021년 4월 22일에 있었던 [클라이언트 1.2.347](https://maplestory.nexon.com/news/update/626) 변동사항 반영
 
 ## 다운로드
 * [Google Play 스토어](https://play.google.com/store/apps/details?id=com.darktornado.mapletools)
