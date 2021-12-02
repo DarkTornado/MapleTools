@@ -19,21 +19,22 @@ class UpgradeActivity : Activity() {
         layout.orientation = 1
 
         val txt1 = TextView(this)
-        txt1.text = "주스탯 증가량 : "
+        txt1.text = "부위 : "
         txt1.setTextColor(Color.BLACK)
         txt1.textSize = 18f
         layout.addView(txt1)
-        val txt2 = EditText(this)
-        txt2.hint = "주스탯 증가량을 입력하세요..."
-        txt2.inputType = InputType.TYPE_CLASS_NUMBER
-        layout.addView(txt2)
+        val parts = arrayOf<String?>("무기", "방어구 (방패 포함, 장갑 제외)", "장갑", "장신구")
+        val spin = Spinner(this)
+        spin.adapter = ArrayAdapter<Any?>(this, android.R.layout.simple_list_item_1, parts)
+        spin.layoutParams = LinearLayout.LayoutParams(-1, -2)
+        layout.addView(spin)
         val txt3 = TextView(this)
-        txt3.text = "\n부스탯 증가량 : "
+        txt3.text = "\n착용 레벨 제한 : "
         txt3.setTextColor(Color.BLACK)
         txt3.textSize = 18f
         layout.addView(txt3)
         val txt4 = EditText(this)
-        txt4.hint = "부스탯 증가량을 입력하세요..."
+        txt4.hint = "착용 레벨 제한을 입력하세요..."
         txt4.inputType = InputType.TYPE_CLASS_NUMBER
         layout.addView(txt4)
         val txt5 = TextView(this)
@@ -49,22 +50,20 @@ class UpgradeActivity : Activity() {
         val calc = Button(this)
         calc.text = "주흔작 계산"
         calc.setOnClickListener { view: View? ->
-            val input1 = txt2.text.toString()
             val input2 = txt4.text.toString()
             val input3 = txt6.text.toString()
-            if (input1.isBlank() || input2.isBlank() || input3.isBlank()) {
+            if (input2 == "" || input3 == "") {
                 toast("입력되지 않은 값이 있어요.")
             } else {
-//                selectItemType(input1.toInt(), input2.toInt(), input3.toInt())
+//                selectItemType(spin.getSelectedItemPosition(), Integer.parseInt(input2), Integer.parseInt(input3));
             }
         }
         layout.addView(calc)
-
         val info = Button(this)
         info.text = "기능 정보"
         info.setOnClickListener { view: View? ->
-            showDialog("기능 정보 & 도움말", "아이템에 사용된 주문서가 100%인지 70%인지 30%인지 15%인지 계산해주는 기능이에요.\n" +
-                    "주문의 흔적이 아닌 다른 주문서를 사용한 아이템은 계산할 수 없어요.")
+            showDialog("기능 정보 & 도움말", """ 아이템에 사용된 주문서가 100%인지 70%인지 30%인지 15%인지 계산해주는 기능이에요.
+ 주문의 흔적이 아닌 다른 주문서를 사용한 아이템은 계산할 수 없어요.""")
         }
         layout.addView(info)
 
