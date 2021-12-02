@@ -13,10 +13,9 @@
 * 보스 방무 적용 계산기
 * [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회
 
-## 개발중인 기능 목록
+## 개발중 & 수정중인 기능 목록
 * [ ] [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
-
-## 변경할 기능 목록
+* [ ] 메소 시세 조회
 * [x] 실방무 계산기 : 소수점 아래 두 자리 까지 계산 가능하도록 변경
   * 2021년 4월 22일에 있었던 [클라이언트 1.2.347](https://maplestory.nexon.com/news/update/626) 변동사항 반영
 
