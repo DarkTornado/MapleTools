@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 
 public class Tools {
 
-    public static final String VERSION = "1.1";
+    public static final String VERSION = "2.0";
 
     public static String loadLicense(Context ctx, String fileName) {
         try {
