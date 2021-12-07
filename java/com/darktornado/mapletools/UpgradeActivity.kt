@@ -37,15 +37,35 @@ class UpgradeActivity : Activity() {
         txt4.hint = "착용 레벨 제한을 입력하세요..."
         txt4.inputType = InputType.TYPE_CLASS_NUMBER
         layout.addView(txt4)
+
         val txt5 = TextView(this)
-        txt5.text = "\n업그레이드 성공 횟수 : "
+        txt5.text = "\n주스탯 증가량 : "
         txt5.setTextColor(Color.BLACK)
         txt5.textSize = 18f
         layout.addView(txt5)
         val txt6 = EditText(this)
-        txt6.hint = "성공 횟수를 입력하세요..."
+        txt6.hint = "주스탯 증가량을 입력하세요..."
         txt6.inputType = InputType.TYPE_CLASS_NUMBER
         layout.addView(txt6)
+        val txt7 = TextView(this)
+        txt7.text = "\n부스탯 증가량 : "
+        txt7.setTextColor(Color.BLACK)
+        txt7.textSize = 18f
+        layout.addView(txt7)
+        val txt8 = EditText(this)
+        txt8.hint = "부스탯 증가량을 입력하세요..."
+        txt8.inputType = InputType.TYPE_CLASS_NUMBER
+        layout.addView(txt8)
+
+        val txt9 = TextView(this)
+        txt9.text = "\n업그레이드 성공 횟수 : "
+        txt9.setTextColor(Color.BLACK)
+        txt9.textSize = 18f
+        layout.addView(txt9)
+        val txt10 = EditText(this)
+        txt10.hint = "성공 횟수를 입력하세요..."
+        txt10.inputType = InputType.TYPE_CLASS_NUMBER
+        layout.addView(txt10)
 
         val calc = Button(this)
         calc.text = "주흔작 계산"
