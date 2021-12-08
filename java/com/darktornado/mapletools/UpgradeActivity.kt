@@ -77,7 +77,7 @@ class UpgradeActivity : Activity() {
             if (lv == "" || main == "" || sub == "" || up == "") {
                 toast("입력되지 않은 값이 있어요.")
             } else {
-                val diff = main.toInt() - sub.toInt() - up.toInt()
+                val diff = (main.toInt() - sub.toInt()) / up.toInt()
                 when (spin.selectedItemPosition) {
                     0 -> {
                     }
