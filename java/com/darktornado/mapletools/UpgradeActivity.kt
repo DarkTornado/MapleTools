@@ -98,8 +98,8 @@ class UpgradeActivity : Activity() {
         val info = Button(this)
         info.text = "기능 정보"
         info.setOnClickListener { view: View? ->
-            showDialog("기능 정보 & 도움말", """ 아이템에 사용된 주문서가 100%인지 70%인지 30%인지 15%인지 계산해주는 기능이에요.
- 주문의 흔적이 아닌 다른 주문서를 사용한 아이템은 계산할 수 없어요.""")
+            showDialog("기능 정보 & 도움말", " 아이템에 사용된 주문서가 100%인지 70%인지 30%인지 15%인지 계산해주는 기능이에요.\n"+
+                    " 주문의 흔적이 아닌 다른 주문서를 사용한 아이템은 계산할 수 없어요.")
         }
         layout.addView(info)
 
