@@ -77,14 +77,19 @@ class UpgradeActivity : Activity() {
             if (lv == "" || main == "" || sub == "" || up == "") {
                 toast("입력되지 않은 값이 있어요.")
             } else {
-                val diff = (main.toInt() - sub.toInt()) / up.toInt()
-                when (spin.selectedItemPosition) {
-                    0 -> {
-                    }
-                    1 -> armorCalc(diff, lv.toInt())
-                    2 -> {
-                    }
-                    3 -> {
+                val diff = (main.toDouble() - sub.toDouble()) / up.toDouble()
+                toast(diff.toString())
+                if (diff != diff.toInt().toDouble()) {
+                    toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서를 사용한 것 같아요.")
+                } else {
+                    when (spin.selectedItemPosition) {
+                        0 -> {
+                        }
+                        1 -> armorCalc(diff.toInt(), lv.toInt())
+                        2 -> {
+                        }
+                        3 -> {
+                        }
                     }
                 }
             }
