@@ -81,8 +81,7 @@ class UpgradeActivity : Activity() {
                 when (spin.selectedItemPosition) {
                     0 -> {
                     }
-                    1 -> {
-                    }
+                    1 -> armorCalc(diff, lv.toInt())
                     2 -> {
                     }
                     3 -> {
@@ -105,6 +104,26 @@ class UpgradeActivity : Activity() {
         scroll.addView(layout)
         setContentView(scroll)
     }
+
+    private fun armorCalc(diff: Int, lv: Int) {
+        if (lv < 70) {
+            if (diff == 1) toast("100% 주문서가 사용되었어요")
+            else if (diff == 2) toast("70% 주문서가 사용되었어요")
+            else if (diff == 3) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서를 사용한 것 같아요.")
+        } else if (lv < 110) {
+            if (diff == 2) toast("100% 주문서가 사용되었어요")
+            else if (diff == 3) toast("70% 주문서가 사용되었어요")
+            else if (diff == 5) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서를 사용한 것 같아요.")
+        } else {
+            if (diff == 4) toast("100% 주문서가 사용되었어요")
+            else if (diff == 5) toast("70% 주문서가 사용되었어요")
+            else if (diff == 7) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서를 사용한 것 같아요.")
+        }
+    }
+
 
     private fun showDialog(title: String, msg: String) {
         try {
