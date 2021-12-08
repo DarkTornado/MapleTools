@@ -70,12 +70,24 @@ class UpgradeActivity : Activity() {
         val calc = Button(this)
         calc.text = "주흔작 계산"
         calc.setOnClickListener { view: View? ->
-            val input2 = txt4.text.toString()
-            val input3 = txt6.text.toString()
-            if (input2 == "" || input3 == "") {
+            val lv = txt4.text.toString()
+            val main = txt6.text.toString()
+            val sub = txt8.text.toString()
+            val up = txt10.text.toString()
+            if (lv == "" || main == "" || sub == "" || up == "") {
                 toast("입력되지 않은 값이 있어요.")
             } else {
-//                selectItemType(spin.getSelectedItemPosition(), Integer.parseInt(input2), Integer.parseInt(input3));
+                val diff = main.toInt() - sub.toInt() - up.toInt()
+                when (spin.selectedItemPosition) {
+                    0 -> {
+                    }
+                    1 -> {
+                    }
+                    2 -> {
+                    }
+                    3 -> {
+                    }
+                }
             }
         }
         layout.addView(calc)
