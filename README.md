@@ -16,6 +16,7 @@
 ## 개발중 & 수정중인 기능 목록
 * [ ] [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
   * [ ] 무기
+  * [ ] 장갑
   * [ ] 방어구
   * [ ] 장신구
 * [ ] 메소 시세 조회
