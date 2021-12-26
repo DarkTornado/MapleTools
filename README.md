@@ -17,8 +17,8 @@
 * [ ] [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
   * [ ] 무기
   * [ ] 장갑
-  * [ ] 방어구
-  * [ ] 장신구
+  * [x] 방어구
+  * [x] 장신구
 * [ ] 메소 시세 조회
 * [x] 실방무 계산기 : 소수점 아래 두 자리 까지 계산 가능하도록 변경
   * 2021년 4월 22일에 있었던 [클라이언트 1.2.347](https://maplestory.nexon.com/news/update/626) 변동사항 반영
