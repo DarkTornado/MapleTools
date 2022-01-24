@@ -1,5 +1,5 @@
 # 매이플 도구
-© 2021 Dark Tornado, All rights reserved.
+© 2021-2022 Dark Tornado, All rights reserved.
 
 ## 요약
 * [메이플스토리](https://maplestory.nexon.com/)와 관련된 잡기능 모음 앱
