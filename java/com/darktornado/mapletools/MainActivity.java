@@ -78,6 +78,12 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, UpgradeActivity.class));
                 break;
             case 5:
+                //무기 추옵표
+                break;
+            case 6:
+                //메소 시세
+                break;
+            case 7:
                 startActivity(new Intent(this, InfoActivity.class));
                 break;
         }
