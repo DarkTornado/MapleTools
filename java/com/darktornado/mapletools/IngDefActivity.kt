@@ -74,7 +74,7 @@ class IngDefActivity : Activity() {
         layout.addView(info)
 
         val maker = TextView(this)
-        maker.text = "\n© 2022 Dark Tornado, All rights reserved.\n"
+        maker.text = "\n© 2021-2022 Dark Tornado, All rights reserved.\n"
         maker.textSize = 13f
         maker.gravity = Gravity.CENTER
         maker.setTextColor(Color.BLACK)
