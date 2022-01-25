@@ -125,7 +125,7 @@ public class BossActivity extends Activity {
         layout.addView(inde);
 
         TextView maker = new TextView(this);
-        maker.setText("\n© 2021 Dark Tornado, All rights reserved.\n");
+        maker.setText("\n© 2022 Dark Tornado, All rights reserved.\n");
         maker.setTextSize(13f);
         maker.setTextColor(Color.BLACK);
         maker.setGravity(Gravity.CENTER);
