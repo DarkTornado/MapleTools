@@ -20,10 +20,12 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+    private WebView web;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Uri uri;
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case 0:
                 uri = Uri.parse("https://github.com/DarkTornado/MapleTools");
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
@@ -50,10 +52,11 @@ public class MainActivity extends Activity {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(1);
 
-        WebView web = new WebView(this);
+        web = new WebView(this);
         web.addJavascriptInterface(new JSLinker(), "android");
         web.loadUrl("file:///android_asset/index.html");
         web.getSettings().setJavaScriptEnabled(true);
+        web.getSettings().setAllowUniversalAccessFromFileURLs(true);
         layout.addView(web);
 
         layout.setBackgroundColor(Color.WHITE);
@@ -123,6 +126,11 @@ public class MainActivity extends Activity {
         dialog.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (web.canGoBack()) web.goBack();
+        else super.onBackPressed();
+    }
 
     public int dip2px(int dips) {
         return (int) Math.ceil(dips * this.getResources().getDisplayMetrics().density);
@@ -139,5 +147,5 @@ public class MainActivity extends Activity {
         }
 
     }
-    
+
 }
