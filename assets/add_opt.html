@@ -12,81 +12,87 @@
 </style>
 
 <body bgcolor=#FFFFFF style="margin:0px 0px 0px 0px;">
-<div style="padding:30px 20px 20px 20px;">
+    <div style="padding:30px 20px 20px 20px;">
 
-    <details>
-        <summary><b>파프니르 무기 (150제)</b>
-        </summary>
-        <table id='150' width=100% border=1>
-            <tr align=center>
-                <th>공격력</th>
-                <th>1추</th>
-                <th>2추</th>
-                <th>3추</th>
-                <th>4추</th>
-                <th>5추</th>
-            </tr>
-        </table>
-    </details>
-    <br>
-    <details>
-        <summary><b>앱솔랩스 무기 (160제)</b>
-        </summary>
-        <table id='160' width=100% border=1>
-            <tr align=center>
-                <th>공격력</th>
-                <th>1추</th>
-                <th>2추</th>
-                <th>3추</th>
-                <th>4추</th>
-                <th>5추</th>
-            </tr>
-        </table>
-    </details>
-    <br>
-    <details>
-        <summary><b>아케인셰이드 무기 (200제)</b>
-        </summary>
-        <table id='200' width=100% border=1>
-            <tr align=center>
-                <th>공격력</th>
-                <th>1추</th>
-                <th>2추</th>
-                <th>3추</th>
-                <th>4추</th>
-                <th>5추</th>
-            </tr>
-        </table>
-    </details>
-    <br>
-    <details>
-        <summary><b>제네시스 무기</b>
-        </summary>
-        <table id='gen' width=100% border=1>
-            <tr align=center>
-                <th>공격력</th>
-                <th>1추</th>
-                <th>2추</th>
-                <th>3추</th>
-                <th>4추</th>
-                <th>5추</th>
-            </tr>
-        </table>
-    </details>
+        <details>
+            <summary><b>파프니르 무기 (150제)</b>
+            </summary>
+            <table id='150' width=100% border=1>
+                <tr align=center>
+                    <th>공격력</th>
+                    <th>1추</th>
+                    <th>2추</th>
+                    <th>3추</th>
+                    <th>4추</th>
+                    <th>5추</th>
+                </tr>
+            </table>
+        </details>
+        <br>
+        <details>
+            <summary><b>앱솔랩스 무기 (160제)</b>
+            </summary>
+            <table id='160' width=100% border=1>
+                <tr align=center>
+                    <th>공격력</th>
+                    <th>1추</th>
+                    <th>2추</th>
+                    <th>3추</th>
+                    <th>4추</th>
+                    <th>5추</th>
+                </tr>
+            </table>
+        </details>
+        <br>
+        <details>
+            <summary><b>아케인셰이드 무기 (200제)</b>
+            </summary>
+            <table id='200' width=100% border=1>
+                <tr align=center>
+                    <th>공격력</th>
+                    <th>1추</th>
+                    <th>2추</th>
+                    <th>3추</th>
+                    <th>4추</th>
+                    <th>5추</th>
+                </tr>
+            </table>
+        </details>
+        <br>
+        <details>
+            <summary><b>제네시스 무기</b>
+            </summary>
+            <table id='gen' width=100% border=1>
+                <tr align=center>
+                    <th>공격력</th>
+                    <th>1추</th>
+                    <th>2추</th>
+                    <th>3추</th>
+                    <th>4추</th>
+                    <th>5추</th>
+                </tr>
+            </table>
+        </details>
 
-</div>
-<hr width=95%>
-<font color=BLACK size='2px'>
-    <p align=center>© 2021-2022 Dark Tornado, All rights reserved.</p>
-</font>
-<script>
+    </div>
+    <hr width=95%>
+    <font color=BLACK size='2px'>
+        <p align=center>© 2021-2022 Dark Tornado, All rights reserved.</p>
+    </font>
+    <script>
         applyData = (name, data) => {
+            var names = {
+                '150': '파프니르',
+                '160': '앱솔랩스',
+                '200': '아케인셰이드',
+                'gen': '제네시스'
+            };
             data = data.split("\n");
             var table = document.getElementById(name);
             for (var n = 1; n < data.length; n++) {
                 var datum = data[n].trim().split(",");
                 table.innerHTML += '<tr align=center>' +
-                    '<td colspan=6>' + datum[1] + ' (' + datum[0] + ')</td>' +
+                    '<td colspan=6>' + names[name] + ' ' + datum[1] + ' (' + datum[0] + ')</td>' +
                     '</tr>' +
                     '<tr align=center>' +
                     '<td>' + datum[7] + '</td>' +
