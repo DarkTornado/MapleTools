@@ -26,19 +26,28 @@
             android:name=".IngDefActivity"
             android:configChanges="orientation|screenSize"
             android:label="메이플 도구 - 실방무 계산기" />
-        <activity android:name=".BossActivity"
+        <activity
+            android:name=".BossActivity"
             android:configChanges="orientation|screenSize"
-            android:label="메이플 도구 - 보스 방무 적용 계산기"/>
-        <activity android:name=".MutoActivity"
+            android:label="메이플 도구 - 보스 방무 적용 계산기" />
+        <activity
+            android:name=".MutoActivity"
             android:configChanges="orientation|screenSize"
-            android:label="메이플 도구 - 배고픈 무토 레시피"/>
-        <activity android:name=".UpgradeActivity"
+            android:label="메이플 도구 - 배고픈 무토 레시피" />
+        <activity
+            android:name=".UpgradeActivity"
             android:configChanges="orientation|screenSize"
             android:label="메이플 도구 - 주문의 흔적 계산기" />
-        <activity android:name=".InfoActivity"
+        <activity
+            android:name=".AddOptActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="메이플 도구 - 무기 추가옵션 표" />
+        <activity
+            android:name=".InfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="메이플 도구 - 앱 정보" />
-        <activity android:name=".LicenseActivity"
+        <activity
+            android:name=".LicenseActivity"
             android:configChanges="orientation|screenSize"
             android:label="메이플 도구 - 오픈 소스 라이선스" />
 
@@ -46,6 +55,5 @@
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
     </application>
-
 
 </manifest>
