@@ -112,7 +112,7 @@ public class MutoActivity extends Activity {
         try {
             String[] types = {"foods", "ingredients"};
             AssetManager am = this.getAssets();
-            InputStream is = am.open("images/" + types[type] + "/" + id + ".png");
+            InputStream is = am.open("images/muto/" + types[type] + "/" + id + ".png");
             Bitmap bitmap = BitmapFactory.decodeStream(is);
             is.close();
             return new BitmapDrawable(bitmap);
