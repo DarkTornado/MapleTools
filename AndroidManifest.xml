@@ -41,7 +41,7 @@
         <activity
             android:name=".AddOptActivity"
             android:configChanges="orientation|screenSize"
-            android:label="메이플 도구 - 무기 추가옵션 표" />
+            android:label="메이플 도구 - 무기 추가옵션 목록" />
         <activity
             android:name=".InfoActivity"
             android:configChanges="orientation|screenSize"
