@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,10 +16,15 @@ import com.darktornado.mapletools.R;
 
 import java.util.ArrayList;
 
-public class ListAdapter extends BaseAdapter {
+public class ListAdapter extends BaseAdapter implements Filterable {
 
+    private final ArrayList<Item> _list;
     private ArrayList<Item> list = new ArrayList<>();
     private int size = -1;
+
+    public ListAdapter() {
+        _list = list;
+    }
 
     @Override
     public int getCount() {
@@ -72,5 +79,34 @@ public class ListAdapter extends BaseAdapter {
 
     private int dip2px(Context ctx, int dips) {
         return (int) Math.ceil(dips * ctx.getResources().getDisplayMetrics().density);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence input) {
+                FilterResults results = new FilterResults();
+                if (input == null || input.length() == 0) {
+                    results.values = _list;
+                    results.count = _list.size();
+                } else {
+                    ArrayList<Item> filteredList = new ArrayList<>();
+                    for (Item item : _list) {
+                        if (item.title.contains(input) || item.subtitle.contains(input))
+                            filteredList.add(new Item(item.title, item.subtitle, item.icon));
+                    }
+                    results.values = filteredList;
+                    results.count = filteredList.size();
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence input, FilterResults filteredList) {
+                list = (ArrayList<Item>) filteredList.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }
