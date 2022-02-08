@@ -18,6 +18,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+
 public class MainActivity extends Activity {
 
     private WebView web;
@@ -84,7 +87,7 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, AddOptActivity.class));
                 break;
             case 6:
-                //메소 시세
+                new Thread(this::loadMesoPrice).start();
                 break;
             case 7:
                 startActivity(new Intent(this, InfoActivity.class));
@@ -124,6 +127,31 @@ public class MainActivity extends Activity {
             }
         });
         dialog.show();
+    }
+
+    private void loadMesoPrice() {
+        try {
+            String data0 = Jsoup.connect("https://commapi.gamemarket.kr/comm/graph")
+                    .ignoreContentType(true)
+                    .post().text();
+            String[] names = {"스카니아", "베라", "루나", "제니스", "크로아", "유니온", "엘리시움", "이노시스", "레드", "오로라", "아케인", "노바"};
+            JSONObject data = new JSONObject(data0);
+            StringBuilder result = new StringBuilder("<meta name='viewport' content='user-scalable=no width=device-width' />" +
+                    "<style>td{padding:5px;}table{border: 1px solid #000000;border-collapse: collapse;}</style>" +
+                    "<table width=100% border=1>");
+            JSONObject data1 = data.getJSONArray("reverse").getJSONObject(0);
+            JSONObject data2 = data.getJSONArray("reverse2").getJSONObject(0);
+            for (int n = 0; n < names.length; n++) {
+                result.append("<tr align=center><td rowspan=2 bgcolor=#EEEEEE><b>" + names[n] + "</b></td><td>" + data1.getString("server" + (n + 1)) + "포인트</td></tr>")
+                        .append("<tr align=center><td>" + data2.getString("server" + (n + 1)) + "엄</td></tr>");
+            }
+            result.append("</table>");
+            Intent intent = new Intent(MainActivity.this, MesoActivity.class);
+            intent.putExtra("data", result.toString());
+            startActivity(intent);
+        } catch (Exception e) {
+            toast("메소 시세 불러오기 실패");
+        }
     }
 
     @Override
