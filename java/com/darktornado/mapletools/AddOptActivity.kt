@@ -3,24 +3,28 @@ package com.darktornado.mapletools
 import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.Pair
 import android.view.View
+import android.webkit.WebView
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import com.darktornado.listview.Item
 import com.darktornado.listview.ListAdapter
 import java.io.IOException
-import kotlin.collections.ArrayList
 
 class AddOptActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        actionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#F58801")))
         val layout = LinearLayout(this)
         layout.orientation = 1
         var _data: Pair<ArrayList<Item>, ArrayList<String>> = createData("파프니르", "150")
@@ -121,8 +125,21 @@ class AddOptActivity : Activity() {
 
     private fun showInfo(item: Item, data: String) {
         val dialog: AlertDialog.Builder = AlertDialog.Builder(this);
-        //Nusty.getWebDialog(this, item.title, data)
+        dialog.setTitle(item.title)
         dialog.setIcon(item.icon)
+        val layout = LinearLayout(this)
+        layout.orientation = 1
+        val web = WebView(this)
+        if (Build.VERSION.SDK_INT > 23) {
+            web.loadDataWithBaseURL(null, data, "text/html; charset=UTF-8", null, null)
+        } else {
+            web.loadData(data, "text/html; charset=UTF-8", null)
+        }
+        layout.addView(web)
+        val pad = dip2px(16)
+        layout.setPadding(pad, pad, pad, pad)
+        dialog.setView(layout)
+        dialog.setNegativeButton("닫기", null)
         dialog.show()
     }
 
