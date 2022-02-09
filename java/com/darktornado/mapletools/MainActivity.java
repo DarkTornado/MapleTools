@@ -131,6 +131,26 @@ public class MainActivity extends Activity {
 
     private void loadMesoPrice() {
         try {
+            String[][] unit = {
+                    {"생수", "병"},
+                    {"물", "L"},
+                    {"무릎통증 진료", "회"},
+                    {"인삼", "뿌리"},
+                    {"1 :", "으로 싸운 썰 듣기"},
+                    {"딱밤", "대"},
+                    {"어제 산에서 찾은 산삼", "뿌리"},
+                    {"마카롱", "개"},
+                    {"라면", "봉지"},
+                    {"무토", "판"},
+                    {"머리카락", "가닥"},
+                    {"군생활", "일"},
+                    {"장미꽃", "송이"},
+                    {"감자", "개"},
+                    {"이리나가 깎은 감자", "개"},
+                    {"싸대기", "대"},
+                    {"장미꽃", "송이"},
+                    {"로얄 가드 성공", "번"}
+            };
             String data0 = Jsoup.connect("https://commapi.gamemarket.kr/comm/graph")
                     .ignoreContentType(true)
                     .post().text();
@@ -142,8 +162,9 @@ public class MainActivity extends Activity {
             JSONObject data1 = data.getJSONArray("reverse").getJSONObject(0);
             JSONObject data2 = data.getJSONArray("reverse2").getJSONObject(0);
             for (int n = 0; n < names.length; n++) {
-                result.append("<tr align=center><td rowspan=2 bgcolor=#EEEEEE><b>" + names[n] + "</b></td><td>" + data1.getString("server" + (n + 1)) + "포인트</td></tr>")
-                        .append("<tr align=center><td>" + data2.getString("server" + (n + 1)) + "엄</td></tr>");
+                int r = (int) (Math.random() * unit.length);
+                result.append("<tr align=center><td rowspan=2 bgcolor=#EEEEEE><b>" + names[n] + "</b></td><td>" + data1.getString("server" + (n + 1)) + " 메이플포인트</td></tr>")
+                        .append("<tr align=center><td>" + unit[r][0] + " " + data2.getString("server" + (n + 1)) + " " + unit[r][1] + "</td></tr>");
             }
             result.append("</table>");
             Intent intent = new Intent(MainActivity.this, MesoActivity.class);
