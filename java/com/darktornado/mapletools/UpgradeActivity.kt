@@ -33,7 +33,7 @@ class UpgradeActivity : Activity() {
         txt1.setTextColor(Color.BLACK)
         txt1.textSize = 18f
         layout.addView(txt1)
-        val parts = arrayOf<String?>("무기", "방어구 (방패 포함, 장갑 제외)", "장갑", "장신구")
+        val parts = arrayOf<String?>("무기 & 보조무기 (방패 제외)", "방어구 (방패 포함, 장갑 제외)", "장갑", "장신구")
         val spin = Spinner(this)
         spin.adapter = ArrayAdapter<Any?>(this, android.R.layout.simple_list_item_1, parts)
         spin.layoutParams = LinearLayout.LayoutParams(-1, -2)
@@ -115,8 +115,7 @@ class UpgradeActivity : Activity() {
                     toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
                 } else {
                     when (type) {
-                        0 -> {
-                        }
+                        0 -> weaponCalc(diff.toInt(), lv)
                         1 -> armorCalc(diff.toInt(), lv)
                         2 -> glovesCalc(diff.toInt(), lv)
                         3 -> accessoryCalc(diff.toInt(), lv)
@@ -148,6 +147,27 @@ class UpgradeActivity : Activity() {
                 82, 99
         )
         return data[star].toDouble()
+    }
+
+    private fun weaponCalc(diff: Int, lv: Int) {
+        if (lv <= 70) {
+            if (diff == 0) toast("100% 주문서 또는 70% 주문서가 사용되었어요")
+            else if (diff == 1) toast("30% 주문서가 사용되었어요")
+            else if (diff == 2) toast("15% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+        } else if (lv <= 110) {
+            if (diff == 0) toast("100% 주문서가 사용되었어요")
+            else if (diff == 1) toast("70% 주문서가 사용되었어요")
+            else if (diff == 2) toast("30% 주문서가 사용되었어요")
+            else if (diff == 3) toast("15% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+        } else {
+            if (diff == 1) toast("100% 주문서가 사용되었어요")
+            else if (diff == 2) toast("70% 주문서가 사용되었어요")
+            else if (diff == 3) toast("30% 주문서가 사용되었어요")
+            else if (diff == 4) toast("15% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+        }
     }
 
     private fun armorCalc(diff: Int, lv: Int) {
