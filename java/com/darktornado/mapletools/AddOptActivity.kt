@@ -61,7 +61,11 @@ class AddOptActivity : Activity() {
                     break
                 }
             }
-            showInfo(items[index], data[index])
+            if (text == "라피스 & 라즐리") {
+//                openZeroTable()
+            } else {
+                showInfo(items[index], data[index])
+            }
         }
         txt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
