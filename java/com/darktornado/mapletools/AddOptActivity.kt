@@ -39,6 +39,8 @@ class AddOptActivity : Activity() {
         _data = createData("제네시스", "gen")
         items.addAll(_data.first)
         data.addAll(_data.second)
+        items.add(Item("라피스 & 라즐리", "대검 & 태도", loadIcon()))
+        data.add("")
 
         val txt = EditText(this)
         txt.hint = "검색어를 입력하세요..."
@@ -120,6 +122,19 @@ class AddOptActivity : Activity() {
             toast("앱 리버싱이 감지되었어요?\n$e")
         }
         return null
+    }
+
+    private fun loadIcon(): Drawable {
+        try {
+            val am = this.assets
+            val `is` = am.open("images/LimitBreak.png")
+            val bitmap = BitmapFactory.decodeStream(`is`)
+            `is`.close()
+            return BitmapDrawable(bitmap)
+        } catch (e: IOException) {
+            toast("앱 리버싱이 감지되었어요?\n$e")
+        }
+        return BitmapDrawable()
     }
 
 
