@@ -1,5 +1,6 @@
 package com.darktornado.mapletools
 
+import android.R
 import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.BitmapFactory
@@ -13,6 +14,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.Pair
+import android.view.Gravity
 import android.view.View
 import android.webkit.WebView
 import android.widget.*
@@ -62,7 +64,7 @@ class AddOptActivity : Activity() {
                 }
             }
             if (text == "라피스 & 라즐리") {
-//                openZeroTable()
+                openZeroTable()
             } else {
                 showInfo(items[index], data[index])
             }
@@ -162,6 +164,22 @@ class AddOptActivity : Activity() {
         dialog.show()
     }
 
+    private fun openZeroTable() {
+        val window = PopupWindow()
+        val layout = LinearLayout(this)
+        layout.orientation = 1
+        val web = WebView(this)
+        web.loadUrl("file:///android_asset/MapleTools/add_opt_zero.html")
+        web.settings.javaScriptEnabled = true
+        layout.addView(web)
+        window.contentView = layout
+        window.isFocusable = true
+        window.width = -1
+        window.height = -1
+        window.animationStyle = R.style.Animation_InputMethod
+        window.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        window.showAtLocation(getWindow().decorView, Gravity.CENTER, 0, 0)
+    }
 
     fun dip2px(dips: Int): Int {
         return Math.ceil(dips * this.resources.displayMetrics.density.toDouble()).toInt()
