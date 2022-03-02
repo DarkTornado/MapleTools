@@ -167,6 +167,12 @@ class AddOptActivity : Activity() {
         val window = PopupWindow()
         val layout = LinearLayout(this)
         layout.orientation = 1
+        val title = Toolbar(this)
+        title.title = "제로 추가옵션 표"
+        title.setTitleTextColor(Color.WHITE)
+        title.setBackgroundColor(Color.parseColor("#F58801"))
+        title.setElevation(dip2px(5).toFloat())
+        layout.addView(title)
         val web = WebView(this)
         web.loadUrl("file:///android_asset/MapleTools/add_opt_zero.html")
         web.settings.javaScriptEnabled = true
