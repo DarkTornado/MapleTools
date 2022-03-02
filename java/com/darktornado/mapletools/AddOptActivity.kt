@@ -174,7 +174,7 @@ class AddOptActivity : Activity() {
         title.setElevation(dip2px(5).toFloat())
         layout.addView(title)
         val web = WebView(this)
-        web.loadUrl("file:///android_asset/MapleTools/add_opt_zero.html")
+        web.loadUrl("file:///android_asset/add_opt_zero.html")
         web.settings.javaScriptEnabled = true
         layout.addView(web)
         window.contentView = layout
