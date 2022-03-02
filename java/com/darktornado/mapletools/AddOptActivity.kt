@@ -1,6 +1,5 @@
 package com.darktornado.mapletools
 
-import android.R
 import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.BitmapFactory
@@ -176,7 +175,7 @@ class AddOptActivity : Activity() {
         window.isFocusable = true
         window.width = -1
         window.height = -1
-        window.animationStyle = R.style.Animation_InputMethod
+        window.animationStyle = android.R.style.Animation_InputMethod
         window.setBackgroundDrawable(ColorDrawable(Color.WHITE))
         window.showAtLocation(getWindow().decorView, Gravity.CENTER, 0, 0)
     }
