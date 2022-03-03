@@ -14,9 +14,9 @@
 * [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회
 
 ## 개발중 & 수정중인 기능 목록
-* [ ] [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
-  * [ ] 무기
-  * [ ] 장갑
+* [x] [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
+  * [x] 무기
+  * [x] 장갑
   * [x] 방어구
   * [x] 장신구
 * [x] 무기 추가옵션 목록
