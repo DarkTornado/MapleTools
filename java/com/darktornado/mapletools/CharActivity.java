@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -14,6 +16,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 public class CharActivity extends Activity {
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 0, 0, "프로필 저장");
+        menu.add(0, 1, 0, "프로필 저장 및 공유");
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
