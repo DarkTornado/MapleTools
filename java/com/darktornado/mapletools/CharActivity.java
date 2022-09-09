@@ -1,10 +1,19 @@
 package com.darktornado.mapletools;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -15,11 +24,37 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Date;
+
 public class CharActivity extends Activity {
+
+    private CharInfo info;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        new Thread(() -> {
+            try {
+                Bitmap bitmap = createCard();
+                String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+                String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, fileName, null);
+                if (item.getItemId() == 1) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+                    intent.setType("image/*");
+                    startActivity(Intent.createChooser(intent, "캐릭터 정보 공유"));
+                }
+            } catch (Exception e) {
+                toast(e.toString());
+            }
+        }).start();
         return super.onOptionsItemSelected(item);
     }
 
@@ -51,7 +86,7 @@ public class CharActivity extends Activity {
     private void loadMapleInfo(final String name, final WebView web) {
         new Thread(() -> {
             try {
-                CharInfo info = loadCharInfo(name, "");
+                info = loadCharInfo(name, "");
                 if (info == null) info = loadCharInfo(name, "&w=254");
 
                 final StringBuilder result = new StringBuilder("<meta name='viewport' content='user-scalable=no width=device-width' />")
@@ -101,10 +136,68 @@ public class CharActivity extends Activity {
             String job = tmp.get(1).text();
             String serName = tmp.get(2).text();
 
-            return new CharInfo(img, rank, exp, pri, guild, serIcon, serName, lv, job);
+            return new CharInfo(name, img, rank, exp, pri, guild, serIcon, serName, lv, job);
         } catch (Exception e) {
             if (!params.equals("")) toast("해당 닉네임을 가진 캐릭터를 찾을 수 없거나, 오류가 발생햐였습니다.");
 //            toast(e.toString());
+        }
+        return null;
+    }
+
+    private Bitmap createCard() {
+        try {
+            int s = 2;
+            String path = "images/background.png";
+            Bitmap background = BitmapFactory.decodeStream(getAssets().open(path));
+            Bitmap cache = getImageFromWeb(info.img);
+            Bitmap charImage = Bitmap.createScaledBitmap(cache, cache.getWidth() * s, cache.getHeight() * s, true);
+            cache = getImageFromWeb(info.server);
+            Bitmap server = Bitmap.createScaledBitmap(cache, cache.getWidth() * s, cache.getHeight() * s, true);
+
+            Bitmap bitmap = Bitmap.createBitmap(background.getWidth(), background.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            canvas.drawBitmap(background, new Matrix(), new Paint());
+
+//            Typeface font = Typeface.createFromAsset(getAssets(), "Maplestory.ttf");
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+//            paint.setTypeface(font);
+            paint.setColor(Color.argb(90, 255, 255, 255));
+
+            canvas.drawRect(0, 0, 360 * s, 180 * s, paint);
+
+            canvas.drawBitmap(charImage, 200 * s, 0 * s, new Paint());
+            canvas.drawBitmap(server, 8 * s, 9 * s, new Paint());
+
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(20 * s);
+            canvas.drawText(info.name, 20 * s, 160 * s, paint);
+
+            paint.setTextSize(12 * s);
+            canvas.drawText("Lv." + info.lv + " " + info.job, 20 * s, 135 * s, paint);
+            canvas.drawText(info.world + (info.guild.equals("") ? "" : " / " + info.guild), 30 * s, 19 * s, paint);
+
+            return bitmap;
+        } catch (IOException e) {
+            toast(e.toString());
+        }
+        return null;
+    }
+
+    public Bitmap getImageFromWeb(String link) {
+        try {
+            URL url = new URL(link);
+            URLConnection con = url.openConnection();
+            if (con != null) {
+                con.setConnectTimeout(5000);
+                con.setUseCaches(false);
+                BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
+                Bitmap bitmap = BitmapFactory.decodeStream(bis);
+                bis.close();
+                return bitmap;
+            }
+        } catch (Exception e) {
+            toast(e.toString());
         }
         return null;
     }
@@ -120,9 +213,10 @@ public class CharActivity extends Activity {
 
 
     private static class CharInfo {
-        String img, rank, exp, pri, guild, server, world, lv, job;
+        String name, img, rank, exp, pri, guild, server, world, lv, job;
 
-        public CharInfo(String img, String rank, String exp, String pri, String guild, String server, String world, String lv, String job) {
+        public CharInfo(String name, String img, String rank, String exp, String pri, String guild, String server, String world, String lv, String job) {
+            this.name = name;
             this.img = img;
             this.rank = rank;
             this.exp = exp;
@@ -134,4 +228,5 @@ public class CharActivity extends Activity {
             this.job = job;
         }
     }
+
 }
