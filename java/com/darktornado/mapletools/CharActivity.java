@@ -1,6 +1,8 @@
 package com.darktornado.mapletools;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.Menu;
@@ -26,6 +29,7 @@ import org.jsoup.select.Elements;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -41,13 +45,42 @@ public class CharActivity extends Activity {
             try {
                 Bitmap bitmap = createCard();
                 String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-                String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, fileName, null);
+//                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+
+                ContentResolver resolver = getContentResolver();
+
+                Uri imageCollection;
+                if (Build.VERSION.SDK_INT >= 29) {
+                    imageCollection = MediaStore.Images.Media
+                            .getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                } else {
+                    imageCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+                values.put(MediaStore.Images.Media.RELATIVE_PATH,  "Pictures/MapleTools");
+                values.put(MediaStore.Images.Media.IS_PENDING, 1);
+
+                Uri uri = resolver.insert(imageCollection, values);
+                ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "w", null);
+                FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+
+
+                values.clear();
+                values.put(MediaStore.Images.Media.IS_PENDING, 0);
+                resolver.update(uri, values, null, null);
+
+//                String path = MediaStore.Images.Media.insertImage(cr, bitmap, fileName, null);
                 if (item.getItemId() == 1) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+//                    intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+                    intent.putExtra(Intent.EXTRA_STREAM, uri);
                     intent.setType("image/*");
                     startActivity(Intent.createChooser(intent, "캐릭터 정보 공유"));
                 }
