@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
@@ -28,7 +29,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -45,41 +46,12 @@ public class CharActivity extends Activity {
             try {
                 Bitmap bitmap = createCard();
                 String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
-//                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+                String path = "Pictures/MapleTools";
+                Uri uri = saveCard(bitmap, path, fileName);
 
-                ContentResolver resolver = getContentResolver();
-
-                Uri imageCollection;
-                if (Build.VERSION.SDK_INT >= 29) {
-                    imageCollection = MediaStore.Images.Media
-                            .getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                } else {
-                    imageCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
-                values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-                values.put(MediaStore.Images.Media.RELATIVE_PATH,  "Pictures/MapleTools");
-                values.put(MediaStore.Images.Media.IS_PENDING, 1);
-
-                Uri uri = resolver.insert(imageCollection, values);
-                ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "w", null);
-                FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                fos.close();
-
-
-                values.clear();
-                values.put(MediaStore.Images.Media.IS_PENDING, 0);
-                resolver.update(uri, values, null, null);
-
-//                String path = MediaStore.Images.Media.insertImage(cr, bitmap, fileName, null);
                 if (item.getItemId() == 1) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_SEND);
-//                    intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
                     intent.putExtra(Intent.EXTRA_STREAM, uri);
                     intent.setType("image/*");
                     startActivity(Intent.createChooser(intent, "캐릭터 정보 공유"));
@@ -89,6 +61,44 @@ public class CharActivity extends Activity {
             }
         }).start();
         return super.onOptionsItemSelected(item);
+    }
+
+    private Uri saveCard(Bitmap bitmap, String path, String fileName) throws Exception {
+        ContentResolver resolver = getContentResolver();
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            Uri imageCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/MapleTools");
+            values.put(MediaStore.Images.Media.IS_PENDING, 1);
+
+            Uri uri = resolver.insert(imageCollection, values);
+            ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "w", null);
+            FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+
+            values.clear();
+            values.put(MediaStore.Images.Media.IS_PENDING, 0);
+            resolver.update(uri, values, null, null);
+
+            return uri;
+        } else {
+            fileName += ".png";
+
+            path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + path;
+            new File(path).mkdirs();
+
+            File file = new File(path, fileName);
+            FileOutputStream fos = new java.io.FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+
+            return Uri.parse("file:///" + path);
+        }
+
     }
 
     @Override
