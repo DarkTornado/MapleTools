@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class CharActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         new Thread(() -> {
             try {
+                StrictMode.enableDefaults();
                 Bitmap bitmap = createCard();
                 String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
                 String path = "Pictures/MapleTools";
@@ -96,7 +98,8 @@ public class CharActivity extends Activity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
 
-            return Uri.parse("file:///" + path);
+//            return Uri.parse("file:///" + path);
+            return Uri.fromFile(file);
         }
 
     }
