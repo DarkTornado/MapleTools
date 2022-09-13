@@ -1,9 +1,13 @@
 package com.darktornado.mapletools;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -25,16 +29,17 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.darktornado.library.ImageSaver;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.Date;
 
 public class CharActivity extends Activity {
@@ -43,65 +48,14 @@ public class CharActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        new Thread(() -> {
-            try {
-                StrictMode.enableDefaults();
-                Bitmap bitmap = createCard();
-                String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
-                String path = "Pictures/MapleTools";
-                Uri uri = saveCard(bitmap, path, fileName);
-
-                if (item.getItemId() == 1) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_STREAM, uri);
-                    intent.setType("image/*");
-                    startActivity(Intent.createChooser(intent, "캐릭터 정보 공유"));
-                }
-            } catch (Exception e) {
-                toast(e.toString());
-            }
-        }).start();
-        return super.onOptionsItemSelected(item);
-    }
-
-    private Uri saveCard(Bitmap bitmap, String path, String fileName) throws Exception {
-        ContentResolver resolver = getContentResolver();
-
-        if (Build.VERSION.SDK_INT >= 29) {
-            Uri imageCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/MapleTools");
-            values.put(MediaStore.Images.Media.IS_PENDING, 1);
-
-            Uri uri = resolver.insert(imageCollection, values);
-            ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "w", null);
-            FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
-
-            values.clear();
-            values.put(MediaStore.Images.Media.IS_PENDING, 0);
-            resolver.update(uri, values, null, null);
-
-            return uri;
+        if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            toast("이미지를 저장하기 위해 해당 권한이 필요해요.");
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
+            selectBackground(item.getItemId());
         } else {
-            fileName += ".png";
-
-            path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + path;
-            new File(path).mkdirs();
-
-            File file = new File(path, fileName);
-            FileOutputStream fos = new java.io.FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
-
-//            return Uri.parse("file:///" + path);
-            return Uri.fromFile(file);
+            selectBackground(item.getItemId());
         }
-
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -190,11 +144,104 @@ public class CharActivity extends Activity {
         return null;
     }
 
-    private Bitmap createCard() {
+    private void selectBackground(final int itemId) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("배경 선택");
+        String[] names = {"기본 배경", "자동 선택", "레벨 별 배경", "직업 별 배경"};
+        dialog.setItems(names, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (Integer.parseInt(info.lv) < 200 && which == 2)
+                    toast("캐릭터의 레벨이 200 이상일 때만 사용할 수 있어요 :(");
+                else if (which < 2) prepareCard(itemId, which, -1);
+                else selectBackground2(itemId, which);
+            }
+        });
+        dialog.setNegativeButton("취소", null);
+        dialog.show();
+    }
+
+    private void selectBackground2(final int itemId, final int which) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("지역/직업 선택");
+        final String[][] names = {{"소멸의 여로 (200)", "리버스 시티 (205)", "츄츄 아일랜드 (210)", "얌얌 아일랜드 (215)", "꿈의 도시 레헬른 (220)",
+                "신비의 숲 아르카나 (225)", "기억의 늪 모라스 (230)", "태초의 바다 에스페라 (235)", "셀라스, 별이 잠긴 곳 (240)", "문브릿지 (245)",
+                "고통의 미궁 (250)", "리멘 (250)", "신의 도시 세르니움 (260)", "불타는 세르니움 (265)", "호텔 아르크스 (270)", "눈을 뜬 실험실 오디움 (275)"
+        }, { //직업은 출시 순서
+                "모험가", "시그너스 기사단", "영웅", "모험가 - 듀얼블레이드", "레지스탕스", "데몬", "카이저", "엔젤릭버스터",
+                "제로", "키네시스", "카데나", "일리움", "아크", "모험가 - 패스파인더", "호영", "아델", "카인", "라라"
+        }};
+        final int[] lvs = {200, 205, 210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275};
+        int lv = Integer.parseInt(info.lv);
+        for (int n = 0; n < names[0].length; n++) {
+            if (lv < lvs[n]) names[0] = Arrays.copyOfRange(names[0], 0, n);
+        }
+        dialog.setItems(names[which - 2], new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int w) {
+                if (which == 2) prepareCard(itemId, which, lvs[w]);
+                else prepareCard(itemId, which, w);
+            }
+        });
+        dialog.setNegativeButton("취소", null);
+        dialog.show();
+    }
+
+    private void prepareCard(final int itemId, final int type, final int back) {
+        new Thread(() -> {
+            try {
+                StrictMode.enableDefaults();
+                Bitmap bitmap = createCard(type, back);
+                String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
+                String path = "Pictures/MapleTools";
+                Uri uri = ImageSaver.INSTANCE.saveImage(this, bitmap, path, fileName);
+
+                if (itemId == 1) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_STREAM, uri);
+                    intent.setType("image/*");
+                    startActivity(Intent.createChooser(intent, "캐릭터 정보 공유"));
+                }
+            } catch (Exception e) {
+                toast(e.toString());
+            }
+        }).start();
+
+    }
+
+    private Bitmap createCard(int type, int back) {
         try {
             int s = 2;
-            String path = "images/background.png";
-            Bitmap background = BitmapFactory.decodeStream(getAssets().open(path));
+            int lv = Integer.parseInt(info.lv);
+            String path = "images/charcard/";
+            if (type == 0) { //기본 배경
+                path += "default";
+            } else if (type == 1) { //자동 선택
+                if (lv < 200) {
+                    path += String.valueOf(jobBackground(info.job));
+                } else {
+                    if (lv < 205) path += "200";
+                    else if (lv < 210) path += "205";
+                    else if (lv < 215) path += "210";
+                    else if (lv < 220) path += "215";
+                    else if (lv < 225) path += "220";
+                    else if (lv < 230) path += "225";
+                    else if (lv < 235) path += "230";
+                    else if (lv < 240) path += "235";
+                    else if (lv < 245) path += "240";
+                    else if (lv < 250) path += "245";
+                    else if (lv < 255) path += "250";
+                    else if (lv < 260) path += "255";
+                    else if (lv < 265) path += "260";
+                    else if (lv < 270) path += "265";
+                    else if (lv < 275) path += "270";
+                    else path += "275";
+                }
+            } else { //사용자가 직접 선택한 경우
+                path += String.valueOf(back);
+            }
+            Bitmap background = BitmapFactory.decodeStream(getAssets().open(path + ".png"));
             Bitmap cache = getImageFromWeb(info.img);
             Bitmap charImage = Bitmap.createScaledBitmap(cache, cache.getWidth() * s, cache.getHeight() * s, true);
             cache = getImageFromWeb(info.server);
@@ -228,6 +275,46 @@ public class CharActivity extends Activity {
             toast(e.toString());
         }
         return null;
+    }
+
+    private int jobBackground(String job) {
+        if (job.startsWith("전사/")) return 0;
+        if (job.startsWith("마법사/")) return 0;
+        if (job.startsWith("궁수/패스파인더")) return 13;
+        if (job.startsWith("궁수/")) return 0;
+        if (job.startsWith("도적/듀얼블레이더")) return 3;
+        if (job.startsWith("도적/")) return 0;
+        if (job.startsWith("해적/")) return 0;
+
+        if (job.startsWith("기사단/")) return 1;
+
+        if (job.equals("아란")) return 2;
+        if (job.equals("에반")) return 2;
+        if (job.equals("메르세데스")) return 2;
+        if (job.equals("팬텀")) return 2;
+        if (job.equals("루미너스")) return 2;
+        if (job.equals("은월")) return 2;
+
+        if (job.contains("데몬")) return 5;
+        if (job.startsWith("레지스탕스/")) return 4;
+
+
+        if (job.equals("카이저")) return 6;
+        if (job.equals("엔젤릭버스터")) return 7;
+        if (job.equals("카데나")) return 10;
+        if (job.equals("카인")) return 16;
+
+        if (job.equals("아델")) return 15;
+        if (job.equals("일리움")) return 11;
+        if (job.equals("아크")) return 12;
+
+        if (job.equals("호영")) return 14;
+        if (job.equals("라라")) return 17;
+
+        if (job.equals("제로")) return 8;
+        if (job.equals("키네시스")) return 9;
+
+        return 99;
     }
 
     public Bitmap getImageFromWeb(String link) {
