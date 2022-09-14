@@ -3,8 +3,6 @@ package com.darktornado.mapletools;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,18 +12,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.ParcelFileDescriptor;
 import android.os.StrictMode;
-import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -48,13 +45,10 @@ public class CharActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            toast("이미지를 저장하기 위해 해당 권한이 필요해요.");
+        if (Build.VERSION.SDK_INT >= 23) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
-            selectBackground(item.getItemId());
-        } else {
-            selectBackground(item.getItemId());
         }
+        selectBackground(item.getItemId());
         return super.onOptionsItemSelected(item);
     }
 
@@ -192,10 +186,26 @@ public class CharActivity extends Activity {
             try {
                 StrictMode.enableDefaults();
                 Bitmap bitmap = createCard(type, back);
+                runOnUiThread(()->showCard(bitmap, itemId));
+            } catch (Exception e) {
+                toast(e.toString());
+            }
+        }).start();
+    }
+
+    private void showCard(final Bitmap bitmap, final int itemId) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("캐릭터 정보");
+        ImageView image = new ImageView(this);
+        image.setImageBitmap(bitmap);
+        image.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        dialog.setView(image);
+        dialog.setNegativeButton("닫기", null);
+        dialog.setPositiveButton("저장/공유", (dialog1, which) -> {
+            try {
                 String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
                 String path = "Pictures/MapleTools";
                 Uri uri = ImageSaver.INSTANCE.saveImage(this, bitmap, path, fileName);
-
                 if (itemId == 1) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_SEND);
@@ -206,42 +216,46 @@ public class CharActivity extends Activity {
             } catch (Exception e) {
                 toast(e.toString());
             }
-        }).start();
-
+        });
+        dialog.show();
     }
 
     private Bitmap createCard(int type, int back) {
         try {
             int s = 2;
             int lv = Integer.parseInt(info.lv);
-            String path = "images/charcard/";
-            if (type == 0) { //기본 배경
-                path += "default";
-            } else if (type == 1) { //자동 선택
-                if (lv < 200) {
-                    path += String.valueOf(jobBackground(info.job));
-                } else {
-                    if (lv < 205) path += "200";
-                    else if (lv < 210) path += "205";
-                    else if (lv < 215) path += "210";
-                    else if (lv < 220) path += "215";
-                    else if (lv < 225) path += "220";
-                    else if (lv < 230) path += "225";
-                    else if (lv < 235) path += "230";
-                    else if (lv < 240) path += "235";
-                    else if (lv < 245) path += "240";
-                    else if (lv < 250) path += "245";
-                    else if (lv < 255) path += "250";
-                    else if (lv < 260) path += "255";
-                    else if (lv < 265) path += "260";
-                    else if (lv < 270) path += "265";
-                    else if (lv < 275) path += "270";
-                    else path += "275";
+            Bitmap background;
+            if (type == 0) {
+                background = BitmapFactory.decodeStream(getAssets().open("images/charcard.png"));
+            } else {
+                String image;
+                if (type == 1) { //자동 선택
+                    if (lv < 200) {
+                        image = String.valueOf(jobBackground(info.job));
+                    } else {
+                        if (lv < 205) image = "200";
+                        else if (lv < 210) image = "205";
+                        else if (lv < 215) image = "210";
+                        else if (lv < 220) image = "215";
+                        else if (lv < 225) image = "220";
+                        else if (lv < 230) image = "225";
+                        else if (lv < 235) image = "230";
+                        else if (lv < 240) image = "235";
+                        else if (lv < 245) image = "240";
+                        else if (lv < 250) image = "245";
+                        else if (lv < 255) image = "250";
+                        else if (lv < 260) image = "255";
+                        else if (lv < 265) image = "260";
+                        else if (lv < 270) image = "265";
+                        else if (lv < 275) image = "270";
+                        else image = "275";
+                    }
+                } else { //사용자가 직접 선택한 경우
+                    image = String.valueOf(back);
                 }
-            } else { //사용자가 직접 선택한 경우
-                path += String.valueOf(back);
+                background = getImageFromWeb("https://darktornado.develope.kr/maple/charcard/" + image + ".png");
             }
-            Bitmap background = BitmapFactory.decodeStream(getAssets().open(path + ".png"));
+
             Bitmap cache = getImageFromWeb(info.img);
             Bitmap charImage = Bitmap.createScaledBitmap(cache, cache.getWidth() * s, cache.getHeight() * s, true);
             cache = getImageFromWeb(info.server);
@@ -251,10 +265,10 @@ public class CharActivity extends Activity {
             Canvas canvas = new Canvas(bitmap);
             canvas.drawBitmap(background, new Matrix(), new Paint());
 
-//            Typeface font = Typeface.createFromAsset(getAssets(), "Maplestory.ttf");
+            Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Maplestory.ttf");
             Paint paint = new Paint();
             paint.setAntiAlias(true);
-//            paint.setTypeface(font);
+            paint.setTypeface(font);
             paint.setColor(Color.argb(90, 255, 255, 255));
 
             canvas.drawRect(0, 0, 360 * s, 180 * s, paint);
