@@ -357,7 +357,7 @@ public class CharActivity extends Activity {
         return 99;
     }
 
-    public static String getTextFromWeb(String link) {
+    public String getTextFromWeb(String link) {
         try {
             URL url = new URL(link);
             URLConnection con = url.openConnection();
