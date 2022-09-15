@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -28,12 +27,16 @@ import android.widget.Toast;
 
 import com.darktornado.library.ImageSaver;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
@@ -147,46 +150,68 @@ public class CharActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 if (Integer.parseInt(info.lv) < 200 && which == 2)
                     toast("캐릭터의 레벨이 200 이상일 때만 사용할 수 있어요 :(");
-                else if (which < 2) prepareCard(itemId, which, -1);
-                else selectBackground2(itemId, which);
+                else if (which == 2) new Thread(() -> selectLevel(itemId, which)).start();
+                else new Thread(() -> selectJob(itemId, which)).start();
             }
         });
         dialog.setNegativeButton("취소", null);
         dialog.show();
     }
 
-    private void selectBackground2(final int itemId, final int which) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("지역/직업 선택");
-        final String[][] names = {{"소멸의 여로 (200)", "리버스 시티 (205)", "츄츄 아일랜드 (210)", "얌얌 아일랜드 (215)", "꿈의 도시 레헬른 (220)",
-                "신비의 숲 아르카나 (225)", "기억의 늪 모라스 (230)", "태초의 바다 에스페라 (235)", "셀라스, 별이 잠긴 곳 (240)", "문브릿지 (245)",
-                "고통의 미궁 (250)", "리멘 (250)", "신의 도시 세르니움 (260)", "불타는 세르니움 (265)", "호텔 아르크스 (270)", "눈을 뜬 실험실 오디움 (275)"
-        }, { //직업은 출시 순서
-                "모험가", "시그너스 기사단", "영웅", "모험가 - 듀얼블레이드", "레지스탕스", "데몬", "카이저", "엔젤릭버스터",
-                "제로", "키네시스", "카데나", "일리움", "아크", "모험가 - 패스파인더", "호영", "아델", "카인", "라라"
-        }};
-        final int[] lvs = {200, 205, 210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275};
-        int lv = Integer.parseInt(info.lv);
-        for (int n = 0; n < names[0].length; n++) {
-            if (lv < lvs[n]) names[0] = Arrays.copyOfRange(names[0], 0, n);
-        }
-        dialog.setItems(names[which - 2], new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int w) {
-                if (which == 2) prepareCard(itemId, which, lvs[w]);
-                else prepareCard(itemId, which, w);
+    private void selectLevel(final int itemId, final int which) {
+        String url = "https://raw.githubusercontent.com/DarkTornado/MapleTools/main/lv.json";
+        String data0 = getTextFromWeb(url);
+        runOnUiThread(() -> {
+            try {
+                JSONArray data = new JSONArray(data0);
+                String[] names = new String[data.length()];
+                final int[] lvs = new int[data.length()];
+                for(int n=0;n<data.length();n++) {
+                    JSONObject datum = data.getJSONObject(n);
+                    lvs[n] = datum.getInt("lv");
+                    names[n] = datum.getString("zone") + " (" + lvs[n] + ")";
+                }
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("레벨에 해당하는 지역 선택");
+                int lv = Integer.parseInt(info.lv);
+                for (int n = 0; n < names.length; n++) {
+                    if (lv < lvs[n]) names = Arrays.copyOfRange(names, 0, n);
+                }
+                dialog.setItems(names, (_dialog, w) -> {
+                    prepareCard(itemId, which, lvs[w]);
+                });
+                dialog.setNegativeButton("취소", null);
+                dialog.show();
+            } catch (Exception e) {
+                toast(e.toString());
             }
         });
-        dialog.setNegativeButton("취소", null);
-        dialog.show();
+    }
+
+    private void selectJob(final int itemId, final int which) {
+        String url = "https://raw.githubusercontent.com/DarkTornado/MapleTools/main/job.csv";
+        final String data0 = getTextFromWeb(url);
+        runOnUiThread(() -> {
+            try {
+                String[] names = data0.split(",");
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("직업(군) 선택");
+                dialog.setItems(names, (_dialog, w) -> prepareCard(itemId, which, w));
+                dialog.setNegativeButton("취소", null);
+                dialog.show();
+            } catch (Exception e) {
+                toast(e.toString());
+            }
+        });
     }
 
     private void prepareCard(final int itemId, final int type, final int back) {
         new Thread(() -> {
             try {
-                StrictMode.enableDefaults();
+                toast("이미지 생성중...");
                 Bitmap bitmap = createCard(type, back);
-                runOnUiThread(()->showCard(bitmap, itemId));
+                runOnUiThread(() -> showCard(bitmap, itemId));
             } catch (Exception e) {
                 toast(e.toString());
             }
@@ -212,6 +237,7 @@ public class CharActivity extends Activity {
                     intent.putExtra(Intent.EXTRA_STREAM, uri);
                     intent.setType("image/*");
                     startActivity(Intent.createChooser(intent, "캐릭터 정보 공유"));
+                    bitmap.recycle();
                 }
             } catch (Exception e) {
                 toast(e.toString());
@@ -329,6 +355,31 @@ public class CharActivity extends Activity {
         if (job.equals("키네시스")) return 9;
 
         return 99;
+    }
+
+    public static String getTextFromWeb(String link) {
+        try {
+            URL url = new URL(link);
+            URLConnection con = url.openConnection();
+            if (con != null) {
+                con.setConnectTimeout(5000);
+                con.setUseCaches(false);
+                con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36");
+                InputStreamReader isr = new InputStreamReader(con.getInputStream());
+                BufferedReader br = new BufferedReader(isr);
+                String str = br.readLine();
+                String line = "";
+                while ((line = br.readLine()) != null) {
+                    str += "\n" + line;
+                }
+                br.close();
+                isr.close();
+                return str;
+            }
+        } catch (Exception e) {
+            //toast(e.toString());
+        }
+        return null;
     }
 
     public Bitmap getImageFromWeb(String link) {
