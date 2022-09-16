@@ -150,6 +150,7 @@ public class CharActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 if (Integer.parseInt(info.lv) < 200 && which == 2)
                     toast("캐릭터의 레벨이 200 이상일 때만 사용할 수 있어요 :(");
+                else if (which < 2) prepareCard(itemId, which, -1);
                 else if (which == 2) new Thread(() -> selectLevel(itemId, which)).start();
                 else new Thread(() -> selectJob(itemId, which)).start();
             }
