@@ -251,35 +251,14 @@ public class CharActivity extends Activity {
             int s = 2;
             int lv = Integer.parseInt(info.lv);
             Bitmap background;
-            if (type == 0) {
+            if (type == 0) { //기본 배경
                 background = BitmapFactory.decodeStream(getAssets().open("images/charcard.png"));
-            } else {
-                String image;
-                if (type == 1) { //자동 선택
-                    if (lv < 200) {
-                        image = String.valueOf(jobBackground(info.job));
-                    } else {
-                        if (lv < 205) image = "200";
-                        else if (lv < 210) image = "205";
-                        else if (lv < 215) image = "210";
-                        else if (lv < 220) image = "215";
-                        else if (lv < 225) image = "220";
-                        else if (lv < 230) image = "225";
-                        else if (lv < 235) image = "230";
-                        else if (lv < 240) image = "235";
-                        else if (lv < 245) image = "240";
-                        else if (lv < 250) image = "245";
-                        else if (lv < 255) image = "250";
-                        else if (lv < 260) image = "255";
-                        else if (lv < 265) image = "260";
-                        else if (lv < 270) image = "265";
-                        else if (lv < 275) image = "270";
-                        else image = "275";
-                    }
-                } else { //사용자가 직접 선택한 경우
-                    image = String.valueOf(back);
-                }
-                background = getImageFromWeb("https://darktornado.develope.kr/maple/charcard/" + image + ".png");
+            } else if (type == 1) { //자동 선택
+                String image = getTextFromWeb("https://darktornado.develope.kr/maple/charcard/?lv=" + info.lv + "&job=" + info.job);
+                if (image.equals("-1")) background = BitmapFactory.decodeStream(getAssets().open("images/charcard.png"));
+                else background = getImageFromWeb("https://darktornado.develope.kr/maple/charcard/" + image + ".png");
+            } else { //사용자가 선택
+                background = getImageFromWeb("https://darktornado.develope.kr/maple/charcard/" + back + ".png");
             }
 
             Bitmap cache = getImageFromWeb(info.img);
@@ -315,46 +294,6 @@ public class CharActivity extends Activity {
             toast(e.toString());
         }
         return null;
-    }
-
-    private int jobBackground(String job) {
-        if (job.startsWith("전사/")) return 0;
-        if (job.startsWith("마법사/")) return 0;
-        if (job.startsWith("궁수/패스파인더")) return 13;
-        if (job.startsWith("궁수/")) return 0;
-        if (job.startsWith("도적/듀얼블레이더")) return 3;
-        if (job.startsWith("도적/")) return 0;
-        if (job.startsWith("해적/")) return 0;
-
-        if (job.startsWith("기사단/")) return 1;
-
-        if (job.equals("아란")) return 2;
-        if (job.equals("에반")) return 2;
-        if (job.equals("메르세데스")) return 2;
-        if (job.equals("팬텀")) return 2;
-        if (job.equals("루미너스")) return 2;
-        if (job.equals("은월")) return 2;
-
-        if (job.contains("데몬")) return 5;
-        if (job.startsWith("레지스탕스/")) return 4;
-
-
-        if (job.equals("카이저")) return 6;
-        if (job.equals("엔젤릭버스터")) return 7;
-        if (job.equals("카데나")) return 10;
-        if (job.equals("카인")) return 16;
-
-        if (job.equals("아델")) return 15;
-        if (job.equals("일리움")) return 11;
-        if (job.equals("아크")) return 12;
-
-        if (job.equals("호영")) return 14;
-        if (job.equals("라라")) return 17;
-
-        if (job.equals("제로")) return 8;
-        if (job.equals("키네시스")) return 9;
-
-        return 99;
     }
 
     public String getTextFromWeb(String link) {
