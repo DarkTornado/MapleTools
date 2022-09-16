@@ -3,6 +3,7 @@ package com.darktornado.library
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -19,7 +20,9 @@ object ImageSaver {
         if (Build.VERSION.SDK_INT >= 29) {
             return saveImageQ(ctx, bitmap, path, fileName)
         } else {
-            return saveImageLegacy(ctx, bitmap, fileName)
+            val file = saveImageAsFile(bitmap, path, fileName)
+            MediaScannerConnection.scanFile(ctx, arrayOf(file.absolutePath), null) { path1: String?, uri: Uri? -> }
+            return Uri.fromFile(file)
         }
     }
 
@@ -43,14 +46,14 @@ object ImageSaver {
         return uri
     }
 
-    private fun saveImageLegacy(ctx: Context, bitmap: Bitmap, fileName: String): Uri {
+    private fun saveImageLegacy(ctx: Context, bitmap: Bitmap, fileName: String): Uri { //어차피 안쓰는데 그냥 남겨둠
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
         val _path = MediaStore.Images.Media.insertImage(ctx.contentResolver, bitmap, fileName, null)
         return Uri.parse(_path)
     }
 
-    fun saveImageAsFile(bitmap: Bitmap, path: String, fileName: String?): Uri {
+    private fun saveImageAsFile(bitmap: Bitmap, path: String, fileName: String?): File {
         var path = path
         var fileName = fileName
         fileName += ".png"
@@ -60,6 +63,6 @@ object ImageSaver {
         val fos = FileOutputStream(file)
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
         fos.close()
-        return Uri.fromFile(file)
+        return file
     }
 }
