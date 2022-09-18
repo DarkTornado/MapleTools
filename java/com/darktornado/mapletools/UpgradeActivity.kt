@@ -210,7 +210,7 @@ class UpgradeActivity : Activity() {
 
     private fun glovesCalc(diff: Int, lv: Int) {
         if (lv <= 70) {
-            if (diff == 0) toast("100% 주문서가 사용되었어요")
+            if (diff == 0) toast("100% 주문서가 사용되었어요?")
             else if (diff == 1) toast("70% 주문서가 사용되었어요")
             else if (diff == 2) toast("30% 주문서가 사용되었어요")
             else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
