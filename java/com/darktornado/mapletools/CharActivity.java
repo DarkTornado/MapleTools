@@ -16,7 +16,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
