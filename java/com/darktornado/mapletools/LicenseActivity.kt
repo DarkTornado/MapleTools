@@ -20,6 +20,7 @@ class LicenseActivity : Activity() {
 
         loadLicenseInfo(layout, "jsoup", "jsoup", "MIT License", "Jonathan Hedley", true)
         loadLicenseInfo(layout, "Material Design", "material", "Apache License 2.0", "Google", false)
+        loadLicenseInfo(layout, "MapleStory", "maple", "", "Nexon", false)
 
         val pad = dip2px(16)
         layout.setPadding(pad, pad, pad, pad)
@@ -39,7 +40,8 @@ class LicenseActivity : Activity() {
         title.setPadding(pad, 0, pad, dip2px(1))
         layout.addView(title)
         val subtitle = TextView(this)
-        subtitle.text = "  by $dev, $license"
+        if (license.isBlank()) subtitle.text = "  by $dev"
+        else subtitle.text = "  by $dev, $license"
         subtitle.textSize = 20f
         subtitle.setTextColor(Color.BLACK)
         subtitle.setPadding(pad, 0, pad, pad)
