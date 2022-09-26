@@ -50,3 +50,7 @@
 
 ## 필요 라이브러리
 * [jsoup](https://jsoup.org/) - MIT License
+
+## 관련 기능
+* 원래는 부가기능들 중 하나로 넣으려고 했던 [코디 시뮬레이터](https://github.com/DarkTornado/MapleCoordiSim)
+
