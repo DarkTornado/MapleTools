@@ -1,5 +1,5 @@
 # 매이플 도구
-© 2021-2022 Dark Tornado, All rights reserved.
+© 2021-2023 Dark Tornado, All rights reserved.
 
 ## 요약
 * [메이플스토리](https://maplestory.nexon.com/)와 관련된 잡기능 모음 앱
@@ -30,7 +30,6 @@
 <img src="Screenshot.png">
 
 ## 업데이트 내역
-
 
 ### 버전 2.0
 * 주흔작 계산기 추가
