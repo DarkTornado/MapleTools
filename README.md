@@ -22,6 +22,7 @@
   * [ ] 무기
   * [ ] 방어구
   * [ ] 장신구
+* [x] 차크람 추가옵션 추가
 
 ## 다운로드
 * [Google Play 스토어](https://play.google.com/store/apps/details?id=com.darktornado.mapletools)
