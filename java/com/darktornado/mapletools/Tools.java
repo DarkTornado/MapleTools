@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class Tools {
 
@@ -31,6 +33,30 @@ public class Tools {
 //            toast(e.toString());
             return null;
         }
+    }
+
+    public static String getWebText(String link) {
+        try {
+            URL url = new URL(link);
+            URLConnection con = url.openConnection();
+            if (con != null) {
+                con.setConnectTimeout(5000);
+                con.setUseCaches(false);
+                InputStreamReader isr = new InputStreamReader(con.getInputStream(), "UTF-8");
+                BufferedReader br = new BufferedReader(isr);
+                String str = br.readLine();
+                String line = "";
+                while ((line = br.readLine()) != null) {
+                    str += "\n" + line;
+                }
+                br.close();
+                isr.close();
+                return str;
+            }
+        } catch (Exception e) {
+            //toast(e.toString());
+        }
+        return null;
     }
 
 }

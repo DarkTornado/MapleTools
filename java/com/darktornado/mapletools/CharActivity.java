@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -116,23 +117,28 @@ public class CharActivity extends Activity {
 
     private CharInfo loadCharInfo(String name, String params) {
         try {
-            Elements data0 = Jsoup.connect("https://maplestory.nexon.com/Ranking/World/Total?c=" + name + params).get().select("tr.search_com_chk");
+            Elements data0 = Jsoup.connect("https://maplestory.nexon.com/N23Ranking/World/Total?c=" + name + params)
+//                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36")
+                    .get().select("tr.search_com_chk");
             String url = "https://maplestory.nexon.com" + data0.select("a").attr("href");//.replace(name + "?p=", name + "?Ranking=");
-            Document data = Jsoup.connect(url).get();
 
-            String img = data0.select("span.char_img").select("img").get(0).attr("src");
-            String rank = data0.select("td").get(0).select("p").get(0).text();
-            String exp = data0.select("td").get(3).text();
-            String pri = data0.select("td").get(4).text();
-            String guild = data0.select("td").get(5).text();
-            String serIcon = data0.select("img").get(5).attr("src");
+            Elements td = data0.select("td");
+            String rank = td.get(0).select("p").get(0).text();
+            String job = td.get(1).select("dd").text();
+            String level = td.get(2).text().replace("Lv.", "");
+            String exp = td.get(3).text();
+            String pri = td.get(4).text();
+            String guild = td.get(5).text();
 
-            Elements tmp = data.select("div.char_info").select("dd");
-            String lv = tmp.get(0).text().replace("LV.", "");
-            String job = tmp.get(1).text();
-            String serName = tmp.get(2).text();
+            Document data = Jsoup.parse(Tools.getWebText(url));
 
-            return new CharInfo(name, img, rank, exp, pri, guild, serIcon, serName, lv, job);
+            Elements dd = data.select("div.char_info").select("dd");
+            String image = data.select("div.char_img").select("img").attr("src")
+                    .replace("/Character/180/", "/Character/");
+            String server = dd.get(2).text();
+            String icon = dd.get(2).select("img").attr("src");
+
+            return new CharInfo(name, image, rank, exp, pri, guild, icon, server, level, job);
         } catch (Exception e) {
             if (!params.equals("")) toast("해당 닉네임을 가진 캐릭터를 찾을 수 없거나, 오류가 발생햐였습니다.");
 //            toast(e.toString());
