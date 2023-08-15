@@ -34,10 +34,13 @@ public class MainActivity extends Activity {
         Uri uri;
         switch (item.getItemId()) {
             case 0:
+                startActivity(new Intent(this, InfoActivity.class));
+                break;
+            case 1:
                 uri = Uri.parse("https://github.com/DarkTornado/MapleTools");
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 break;
-            case 1:
+            case 2:
                 uri = Uri.parse("https://blog.naver.com/dt3141592");
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 break;
@@ -47,8 +50,9 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, 0, 0, "깃허브로 이동");
-        menu.add(0, 1, 0, "개발자 블로그");
+        menu.add(0, 0, 0, "앱 정보");
+        menu.add(0, 1, 0, "깃허브로 이동");
+        menu.add(0, 2, 0, "개발자 블로그");
         return true;
     }
 
