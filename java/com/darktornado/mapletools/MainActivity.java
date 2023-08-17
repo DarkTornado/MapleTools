@@ -94,12 +94,6 @@ public class MainActivity extends Activity {
             case 5:
                 startActivity(new Intent(this, AddOptActivity.class));
                 break;
-            case 6:
-                new Thread(this::loadMesoPrice).start();
-                break;
-            case 7:
-                startActivity(new Intent(this, InfoActivity.class));
-                break;
         }
     }
 
@@ -135,47 +129,6 @@ public class MainActivity extends Activity {
             }
         });
         dialog.show();
-    }
-
-    private void loadMesoPrice() {
-        try {
-            String[][] _unit = {
-                    {"생수", "병"},
-                    {"물", "L"},
-                    {"딱밤", "대"},
-                    {"무릎통증 진료", "회"},
-                    {"어제 산에서 찾은 산삼", "뿌리"},
-                    {"유통기한 하루 남은 라면", "봉지"},
-                    {"어제 빠진 머리카락", "가닥"},
-                    {"맛있는 민물장어", "마리"},
-                    {"이리나가 깎은 감자", "개"},
-                    {"로얄 가드 성공", "번"},
-                    {"제로투 ", "시간 추기"},
-                    {"1 :", "으로 싸운 썰 듣기"}
-            };
-            List<String[]> unit = Arrays.asList(_unit);
-            Collections.shuffle(unit);
-            String data0 = Jsoup.connect("https://commapi.gamemarket.kr/comm/graph")
-                    .ignoreContentType(true)
-                    .post().text();
-            String[] names = {"스카니아", "베라", "루나", "제니스", "크로아", "유니온", "엘리시움", "이노시스", "레드", "오로라", "아케인", "노바"};
-            JSONObject data = new JSONObject(data0);
-            StringBuilder result = new StringBuilder("<meta name='viewport' content='user-scalable=no width=device-width' />" +
-                    "<style>td{padding:5px;}table{border: 1px solid #000000;border-collapse: collapse;}</style>" +
-                    "<table width=100% border=1>");
-            JSONObject data1 = data.getJSONArray("reverse").getJSONObject(0);
-            JSONObject data2 = data.getJSONArray("reverse2").getJSONObject(0);
-            for (int n = 0; n < names.length; n++) {
-                result.append("<tr align=center><td rowspan=2 bgcolor=#EEEEEE><b>" + names[n] + "</b></td><td>" + data1.getString("server" + (n + 1)) + " 메이플포인트</td></tr>")
-                        .append("<tr align=center><td>" + unit.get(n)[0] + " " + data2.getString("server" + (n + 1)) + " " + unit.get(n)[1] + "</td></tr>");
-            }
-            result.append("</table>");
-            Intent intent = new Intent(MainActivity.this, MesoActivity.class);
-            intent.putExtra("data", result.toString());
-            startActivity(intent);
-        } catch (Exception e) {
-            toast("메소 시세 불러오기 실패");
-        }
     }
 
     @Override
