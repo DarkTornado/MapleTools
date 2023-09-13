@@ -85,10 +85,10 @@ class UpgradeActivity : Activity() {
                     val dif = diff.toInt()
                     val isDev = hp.isChecked
                     when (type[0]) {
-                        0 -> weaponCalc(dif, lv)
-                        1 -> armorCalc(dif, lv)
+                        0 -> weaponCalc(dif, lv, isDev)
+                        1 -> armorCalc(dif, lv, isDev)
                         2 -> glovesCalc(dif, lv)
-                        3 -> accessoryCalc(dif, lv)
+                        3 -> accessoryCalc(dif, lv, isDev)
                     }
                 } else {
                     toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
@@ -122,62 +122,47 @@ class UpgradeActivity : Activity() {
         return data[star].toDouble()
     }
 
-    private fun weaponCalc(diff: Int, lv: Int) {
+    private fun weaponCalc(_diff: Int, lv: Int, hp: Boolean) {
+        var diff = _diff
+        if (hp) diff /= 50
         if (lv <= 70) {
             if (diff == 0) toast("100% 주문서 또는 70% 주문서가 사용되었어요")
             else if (diff == 1) toast("30% 주문서가 사용되었어요")
             else if (diff == 2) toast("15% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
         } else if (lv <= 110) {
             if (diff == 0) toast("100% 주문서가 사용되었어요")
             else if (diff == 1) toast("70% 주문서가 사용되었어요")
             else if (diff == 2) toast("30% 주문서가 사용되었어요")
             else if (diff == 3) toast("15% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
         } else {
             if (diff == 1) toast("100% 주문서가 사용되었어요")
             else if (diff == 2) toast("70% 주문서가 사용되었어요")
             else if (diff == 3) toast("30% 주문서가 사용되었어요")
             else if (diff == 4) toast("15% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
         }
     }
 
-    private fun armorCalc(diff: Int, lv: Int) {
+    private fun armorCalc(diff: Int, lv: Int, hp: Boolean) {
+        var value = arrayOf(intArrayOf(1, 2, 3), intArrayOf(2, 3, 5), intArrayOf(3, 4, 7))
+        if (hp) value = arrayOf(intArrayOf(55, 115, 180), intArrayOf(120, 190, 320), intArrayOf(180, 270, 470))
         if (lv <= 70) {
-            if (diff == 1) toast("100% 주문서가 사용되었어요")
-            else if (diff == 2) toast("70% 주문서가 사용되었어요")
-            else if (diff == 3) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            if (diff == value[0][0]) toast("100% 주문서가 사용되었어요")
+            else if (diff == value[0][1]) toast("70% 주문서가 사용되었어요")
+            else if (diff == value[0][2]) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
         } else if (lv <= 110) {
-            if (diff == 2) toast("100% 주문서가 사용되었어요")
-            else if (diff == 3) toast("70% 주문서가 사용되었어요")
-            else if (diff == 5) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            if (diff == value[1][0]) toast("100% 주문서가 사용되었어요")
+            else if (diff == value[1][1]) toast("70% 주문서가 사용되었어요")
+            else if (diff == value[1][2]) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
         } else {
-            if (diff == 3) toast("100% 주문서가 사용되었어요")
-            else if (diff == 4) toast("70% 주문서가 사용되었어요")
-            else if (diff == 7) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
-        }
-    }
-
-    private fun accessoryCalc(diff: Int, lv: Int) {
-        if (lv <= 70) {
-            if (diff == 1) toast("100% 주문서가 사용되었어요")
-            else if (diff == 2) toast("70% 주문서가 사용되었어요")
-            else if (diff == 3) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
-        } else if (lv <= 110) {
-            if (diff == 1) toast("100% 주문서가 사용되었어요")
-            else if (diff == 2) toast("70% 주문서가 사용되었어요")
-            else if (diff == 4) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
-        } else {
-            if (diff == 2) toast("100% 주문서가 사용되었어요")
-            else if (diff == 3) toast("70% 주문서가 사용되었어요")
-            else if (diff == 5) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            if (diff == value[2][0]) toast("100% 주문서가 사용되었어요")
+            else if (diff == value[2][1]) toast("70% 주문서가 사용되었어요")
+            else if (diff == value[2][2]) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
         }
     }
 
@@ -186,15 +171,35 @@ class UpgradeActivity : Activity() {
             if (diff == 0) toast("100% 주문서가 사용되었어요?")
             else if (diff == 1) toast("70% 주문서가 사용되었어요")
             else if (diff == 2) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
         } else {
             if (diff == 1) toast("100% 주문서가 사용되었어요")
             else if (diff == 2) toast("70% 주문서가 사용되었어요")
             else if (diff == 3) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
         }
     }
 
+    private fun accessoryCalc(diff: Int, lv: Int, hp: Boolean) {
+        var value = arrayOf(intArrayOf(1, 2, 3), intArrayOf(1, 2, 4), intArrayOf(2, 3, 5))
+        if (hp) value = arrayOf(intArrayOf(50, 100, 150), intArrayOf(50, 100, 200), intArrayOf(100, 150, 250))
+        if (lv <= 70) {
+            if (diff == value[0][0]) toast("100% 주문서가 사용되었어요")
+            else if (diff == value[0][1]) toast("70% 주문서가 사용되었어요")
+            else if (diff == value[0][2]) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+        } else if (lv <= 110) {
+            if (diff == value[1][0]) toast("100% 주문서가 사용되었어요")
+            else if (diff == value[1][1]) toast("70% 주문서가 사용되었어요")
+            else if (diff == value[1][2]) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+        } else {
+            if (diff == value[2][0]) toast("100% 주문서가 사용되었어요")
+            else if (diff == value[2][1]) toast("70% 주문서가 사용되었어요")
+            else if (diff == value[2][2]) toast("30% 주문서가 사용되었어요")
+            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+        }
+    }
 
     private fun showDialog(title: String, msg: String) {
         try {
