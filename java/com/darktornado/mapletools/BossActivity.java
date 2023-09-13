@@ -35,7 +35,7 @@ public class BossActivity extends Activity {
         layout.addView(txt2);
 
         TextView txt3 = new TextView(this);
-        txt3.setText("실방무 : ");
+        txt3.setText("\n실방무 : ");
         txt3.setTextSize(18);
         txt3.setTextColor(Color.BLACK);
         layout.addView(txt3);
