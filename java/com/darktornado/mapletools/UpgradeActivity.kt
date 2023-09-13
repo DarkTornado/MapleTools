@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
 
 class UpgradeActivity : Activity() {
 
@@ -19,111 +18,85 @@ class UpgradeActivity : Activity() {
         val layout = LinearLayout(this)
         layout.orientation = 1
 
-        val txt1 = TextView(this)
-        val txt3 = TextView(this)
         val txt5 = TextView(this)
-        val txt4 = EditText(this)
-        val txt6 = EditText(this)
-        val txt7 = TextView(this)
-        val txt8 = EditText(this)
-        val txt9 = TextView(this)
-        val txt10 = EditText(this)
 
+        val hp = Switch(this)
+        hp.text = "데몬 어벤져 작 계산"
+        layout.addView(hp)
+
+        val txt1 = TextView(this)
         txt1.text = "부위 : "
-        txt1.setTextColor(Color.BLACK)
-        txt1.textSize = 18f
         layout.addView(txt1)
-        val parts = arrayOf<String?>("무기 & 보조무기 (방패 제외)", "방어구 (방패 포함, 장갑 제외)", "장갑", "장신구")
-        val spin = Spinner(this)
-        spin.adapter = ArrayAdapter<Any?>(this, android.R.layout.simple_list_item_1, parts)
-        spin.layoutParams = LinearLayout.LayoutParams(-1, -2)
-        spin.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
-                if (pos == 2) {
-                    txt5.text = "\n공격력 증가량 : "
-                    txt6.hint = "공격력 증가량을 입력하세요..."
-                    txt7.text = "\n스타포스 : "
-                    txt8.hint = "스타포스 수치를 입력하세요..."
-                } else {
-                    txt5.text = "\n주스탯 증가량 : "
-                    txt6.hint = "주스탯 증가량을 입력하세요..."
-                    txt7.text = "\n부스탯 증가량 : "
-                    txt8.hint = "부스탯 증가량을 입력하세요..."
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        val menus = arrayOf("무기 & 보조무기 (방패 제외)", "방어구 (방패 포함, 장갑 제외)", "장갑", "장신구")
+        val type = intArrayOf(0)
+        val radios = RadioGroup(this)
+        for (n in menus.indices) {
+            val radio = RadioButton(this)
+            radio.text = menus[n]
+            radio.id = n
+            radios.addView(radio)
+            if (n == 0) radio.isChecked = true
         }
-        layout.addView(spin)
+        radios.setOnCheckedChangeListener { radioGroup: RadioGroup?, id: Int ->
+            type[0] = id
+            if (id == 2) {
+                txt5.text = "\n공격력 증가량 : "
+            } else {
+                txt5.text = "\n주스탯 증가량 : "
+            }
+        }
+        layout.addView(radios)
+
+        val txt3 = TextView(this)
         txt3.text = "\n착용 레벨 제한 : "
-        txt3.setTextColor(Color.BLACK)
-        txt3.textSize = 18f
         layout.addView(txt3)
-        txt4.hint = "착용 레벨 제한을 입력하세요..."
+        val txt4 = EditText(this)
+        txt4.hint = "착용 레벨 제한 입력..."
         txt4.inputType = InputType.TYPE_CLASS_NUMBER
         layout.addView(txt4)
 
         txt5.text = "\n주스탯 증가량 : "
-        txt5.setTextColor(Color.BLACK)
-        txt5.textSize = 18f
         layout.addView(txt5)
-        txt6.hint = "주스탯 증가량을 입력하세요..."
+        val txt6 = EditText(this)
+        txt6.hint = "착용 레벨 제한 입력..."
         txt6.inputType = InputType.TYPE_CLASS_NUMBER
         layout.addView(txt6)
-        txt7.text = "\n부스탯 증가량 : "
-        txt7.setTextColor(Color.BLACK)
-        txt7.textSize = 18f
+
+        val txt7 = TextView(this)
+        txt7.text = "\n업그레이드 성공 횟수 : "
         layout.addView(txt7)
-        txt8.hint = "부스탯 증가량을 입력하세요..."
+        val txt8 = EditText(this)
+        txt8.hint = "착용 레벨 제한 입력..."
         txt8.inputType = InputType.TYPE_CLASS_NUMBER
         layout.addView(txt8)
 
-        txt9.text = "\n업그레이드 성공 횟수 : "
-        txt9.setTextColor(Color.BLACK)
-        txt9.textSize = 18f
-        layout.addView(txt9)
-        txt10.hint = "성공 횟수를 입력하세요..."
-        txt10.inputType = InputType.TYPE_CLASS_NUMBER
-        layout.addView(txt10)
-
         val calc = Button(this)
         calc.text = "주흔작 계산"
-        calc.setOnClickListener { view: View? ->
-            val type = spin.selectedItemPosition
-            val _lv = txt4.text.toString()
-            val main = txt6.text.toString()
-            val sub = txt8.text.toString()
-            val up = txt10.text.toString()
-            if (_lv == "" || main == "" || sub == "" || up == "") {
-                toast("입력되지 않은 값이 있어요.")
+        calc.setOnClickListener {
+            val level = txt4.text.toString()
+            val stat = txt6.text.toString()
+            val up = txt8.text.toString()
+            if (level == "" || stat == "" || up == "") {
+                toast("입력되지 않은 값이 있어요")
             } else {
-                val lv = _lv.toInt()
-                val diff: Double
-                diff = if (type == 2) {
-                    val attack = main.toDouble()
-                    val star = sub.toDouble()
-                    val attack2: Double = star2attack(star.toInt())
-                    if (attack2 == -1.0) {
-                        toast("22성까지만 계산할 수 있어요 :(")
-                        return@setOnClickListener
+                val diff = stat.toDouble() / up.toDouble()
+                if (Math.rint(diff) == diff) {
+                    val lv = level.toInt()
+                    val dif = diff.toInt()
+                    val isDev = hp.isChecked
+                    when (type[0]) {
+                        0 -> weaponCalc(dif, lv)
+                        1 -> armorCalc(dif, lv)
+                        2 -> glovesCalc(dif, lv)
+                        3 -> accessoryCalc(dif, lv)
                     }
-                    (attack - attack2) / up.toDouble()
                 } else {
-                    (main.toDouble() - sub.toDouble()) / up.toDouble()
-                }
-                if (Math.rint(diff) != diff) {
-                    toast("주흔작 계산에 실패했어요.\n아이템에 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
-                } else {
-                    when (type) {
-                        0 -> weaponCalc(diff.toInt(), lv)
-                        1 -> armorCalc(diff.toInt(), lv)
-                        2 -> glovesCalc(diff.toInt(), lv)
-                        3 -> accessoryCalc(diff.toInt(), lv)
-                    }
+                    toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
                 }
             }
         }
         layout.addView(calc)
+
         val info = Button(this)
         info.text = "기능 정보"
         info.setOnClickListener { view: View? ->
