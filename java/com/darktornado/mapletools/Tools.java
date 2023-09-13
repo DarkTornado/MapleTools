@@ -9,7 +9,7 @@ import java.net.URLConnection;
 
 public class Tools {
 
-    public static final String VERSION = "2.0";
+    public static final String VERSION = "3.0";
 
     public static String loadLicense(Context ctx, String fileName) {
         String license = readAsset(ctx, "license/" + fileName + ".txt");
