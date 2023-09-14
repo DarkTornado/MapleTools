@@ -18,11 +18,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.darktornado.library.ImageSaver;
@@ -75,7 +79,6 @@ public class CharActivity extends Activity {
         web.setLayoutParams(margin);
         layout.addView(web);
         loadMapleInfo(getIntent().getStringExtra("name"), web);
-
         layout.setBackgroundColor(Color.WHITE);
         setContentView(layout);
     }
@@ -146,77 +149,42 @@ public class CharActivity extends Activity {
         return null;
     }
 
+
     private void selectBackground(final int itemId) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("배경 선택");
-        String[] names = {"기본 배경", "자동 선택", "레벨 별 배경", "직업 별 배경"};
-        dialog.setItems(names, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (Integer.parseInt(info.lv) < 200 && which == 2)
-                    toast("캐릭터의 레벨이 200 이상일 때만 사용할 수 있어요 :(");
-                else if (which < 2) prepareCard(itemId, which, -1);
-                else if (which == 2) new Thread(() -> selectLevel(itemId, which)).start();
-                else new Thread(() -> selectJob(itemId, which)).start();
-            }
+        String[] names = {"기본 배경", "레벨 별 배경 자동 선택"};
+        dialog.setItems(names, (dialog1, which) -> {
+            if (which == 0) prepareCard(itemId, -1);
+            else new Thread(() -> selectLevel(itemId)).start();
         });
         dialog.setNegativeButton("취소", null);
         dialog.show();
     }
 
-    private void selectLevel(final int itemId, final int which) {
-        String url = "https://raw.githubusercontent.com/DarkTornado/MapleTools/main/lv.json";
-        String data0 = getTextFromWeb(url);
-        runOnUiThread(() -> {
-            try {
-                JSONArray data = new JSONArray(data0);
-                String[] names = new String[data.length()];
-                final int[] lvs = new int[data.length()];
-                for(int n=0;n<data.length();n++) {
-                    JSONObject datum = data.getJSONObject(n);
-                    lvs[n] = datum.getInt("lv");
-                    names[n] = datum.getString("zone") + " (" + lvs[n] + ")";
-                }
-
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                dialog.setTitle("레벨에 해당하는 지역 선택");
-                int lv = Integer.parseInt(info.lv);
-                for (int n = 0; n < names.length; n++) {
-                    if (lv < lvs[n]) names = Arrays.copyOfRange(names, 0, n);
-                }
-                dialog.setItems(names, (_dialog, w) -> {
-                    prepareCard(itemId, which, lvs[w]);
-                });
-                dialog.setNegativeButton("취소", null);
-                dialog.show();
-            } catch (Exception e) {
-                toast(e.toString());
+    private void selectLevel(final int itemId) {
+        String url = "https://raw.githubusercontent.com/DarkTornado/MapleTools/main/max_level_map.txt";
+        String data = getTextFromWeb(url);
+        if (data == null) {
+            toast("인터넷 연결을 확인해주세요");
+        } else {
+            int lv = Integer.parseInt(info.lv);
+            if (lv < 200) {
+                lv = -1;
+            } else {
+                lv /= 5;
+                lv *= 5;
             }
-        });
+            int maxlv = Integer.parseInt(data);
+            prepareCard(itemId, Math.min(lv, maxlv));
+        }
     }
 
-    private void selectJob(final int itemId, final int which) {
-        String url = "https://raw.githubusercontent.com/DarkTornado/MapleTools/main/job.csv";
-        final String data0 = getTextFromWeb(url);
-        runOnUiThread(() -> {
-            try {
-                String[] names = data0.split(",");
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                dialog.setTitle("직업(군) 선택");
-                dialog.setItems(names, (_dialog, w) -> prepareCard(itemId, which, w));
-                dialog.setNegativeButton("취소", null);
-                dialog.show();
-            } catch (Exception e) {
-                toast(e.toString());
-            }
-        });
-    }
-
-    private void prepareCard(final int itemId, final int type, final int back) {
+    private void prepareCard(final int itemId, final int back) {
         new Thread(() -> {
             try {
                 toast("이미지 생성중...");
-                Bitmap bitmap = createCard(type, back);
+                Bitmap bitmap = createCard(back);
                 runOnUiThread(() -> showCard(bitmap, itemId));
             } catch (Exception e) {
                 toast(e.toString());
@@ -224,50 +192,14 @@ public class CharActivity extends Activity {
         }).start();
     }
 
-    private void showCard(final Bitmap bitmap, final int itemId) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("캐릭터 정보");
-        ImageView image = new ImageView(this);
-        image.setImageBitmap(bitmap);
-        image.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-        dialog.setView(image);
-        dialog.setNegativeButton("닫기", null);
-        dialog.setPositiveButton("저장/공유", (dialog1, which) -> {
-            try {
-                String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
-                String path = "Pictures/MapleTools";
-                Uri uri = ImageSaver.INSTANCE.saveImage(this, bitmap, path, fileName);
-                if (itemId == 1) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_STREAM, uri);
-                    intent.setType("image/*");
-                    startActivity(Intent.createChooser(intent, "캐릭터 정보 공유"));
-                    bitmap.recycle();
-                }
-            } catch (Exception e) {
-                toast(e.toString());
-            }
-        });
-        dialog.show();
-    }
-
-    private Bitmap createCard(int type, int back) {
+    private Bitmap createCard(int back) {
         try {
             int s = 2;
-            int lv = Integer.parseInt(info.lv);
             Bitmap background;
-            if (type == 0) { //기본 배경
-                background = BitmapFactory.decodeStream(getAssets().open("images/charcard.png"));
-            } else if (type == 1) { //자동 선택
-                String image = getTextFromWeb("https://darktornado.develope.kr/maple/charcard/?lv=" + info.lv + "&job=" + info.job);
-                if (image.equals("-1")) background = BitmapFactory.decodeStream(getAssets().open("images/charcard.png"));
-                else background = getImageFromWeb("https://darktornado.develope.kr/maple/charcard/" + image + ".png");
-            } else { //사용자가 선택
-                background = getImageFromWeb("https://darktornado.develope.kr/maple/charcard/" + back + ".png");
-            }
+            if (back == -1) background = BitmapFactory.decodeStream(getAssets().open("images/charcard.png"));
+            else background = getImageFromWeb("https://darktornado.net/mapletools/images/" + back + ".jpg");
 
-            Bitmap cache = getImageFromWeb(info.img);
+            Bitmap cache = getImageFromWeb(info.img.replace("/Character/", "/Character/180/"));
             Bitmap charImage = Bitmap.createScaledBitmap(cache, cache.getWidth() * s, cache.getHeight() * s, true);
             cache = getImageFromWeb(info.server);
             Bitmap server = Bitmap.createScaledBitmap(cache, cache.getWidth() * s, cache.getHeight() * s, true);
@@ -300,6 +232,50 @@ public class CharActivity extends Activity {
             toast(e.toString());
         }
         return null;
+    }
+
+    private void showCard(final Bitmap bitmap, final int itemId) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(1);
+        ImageView image = new ImageView(this);
+        image.setImageBitmap(bitmap);
+        image.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        layout.addView(image);
+        TextView txt = new TextView(this);
+        txt.setText("저장/공유");
+        txt.setGravity(Gravity.RIGHT);
+        int pad = dip2px(8);
+        txt.setPadding(pad, pad, pad, pad);
+        layout.addView(txt);
+        pad = dip2px(16);
+        layout.setPadding(pad, pad, pad, pad);
+        ScrollView scroll = new ScrollView(this);
+        scroll.addView(layout);
+        final PopupWindow window = new PopupWindow(scroll, -2, -2, true);
+        txt.setOnClickListener(view -> {
+            try {
+                String fileName = info.name + "_" + DateFormat.format("yyyyMMdd_HHmmss", new Date()).toString();
+                String path = "Pictures/MapleTools";
+                Uri uri = ImageSaver.INSTANCE.saveImage(this, bitmap, path, fileName);
+                if (itemId == 1) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_STREAM, uri);
+                    intent.setType("image/*");
+                    startActivity(Intent.createChooser(intent, "캐릭터 정보 공유"));
+                    bitmap.recycle();
+                } else {
+                    toast("저장되었어요.");
+                }
+                window.dismiss();
+            } catch (Exception e) {
+                toast(e.toString());
+            }
+        });
+        window.setAnimationStyle(android.R.style.Animation_InputMethod);
+        window.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        window.setElevation(dip2px(3));
+        window.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
     }
 
     public String getTextFromWeb(String link) {
