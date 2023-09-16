@@ -28,14 +28,12 @@ class IngDefActivity : Activity() {
 
         txt1.text = "스탯창 방무 : "
         txt1.textSize = 18f
-        txt1.setTextColor(Color.BLACK);
         layout.addView(txt1)
         txt2.hint = "스탯창에 표시된 방어율 무시 입력"
         txt2.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
         layout.addView(txt2)
         txt3.text = "\n나머지 방무(들) : "
         txt3.textSize = 18f
-        txt3.setTextColor(Color.BLACK);
         layout.addView(txt3)
         txt4.hint = "나머지 방어율 무시(들) 입력 (엔터로 구분)"
 //        txt4.inputType = InputType.TYPE_CLASS_NUMBER
@@ -58,7 +56,6 @@ class IngDefActivity : Activity() {
 
         txt5.text = "\n계산 결과 : "
         txt5.textSize = 18f
-        txt5.setTextColor(Color.BLACK);
         layout.addView(txt5)
         txt6.hint = "계산된 실방무..."
         txt6.inputType = InputType.TYPE_CLASS_NUMBER
@@ -77,7 +74,6 @@ class IngDefActivity : Activity() {
         maker.text = "\n© 2021-2023 Dark Tornado, All rights reserved.\n"
         maker.textSize = 13f
         maker.gravity = Gravity.CENTER
-        maker.setTextColor(Color.BLACK)
         layout.addView(maker)
 
         val pad = dip2px(16)

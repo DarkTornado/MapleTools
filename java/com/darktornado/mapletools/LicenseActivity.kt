@@ -36,14 +36,12 @@ class LicenseActivity : Activity() {
         if (tf) title.text = Html.fromHtml("<b>$name<b>")
         else title.text = Html.fromHtml("<br><b>$name<b>")
         title.textSize = 24f
-        title.setTextColor(Color.BLACK)
         title.setPadding(pad, 0, pad, dip2px(1))
         layout.addView(title)
         val subtitle = TextView(this)
         if (license.isBlank()) subtitle.text = "  by $dev"
         else subtitle.text = "  by $dev, $license"
         subtitle.textSize = 20f
-        subtitle.setTextColor(Color.BLACK)
         subtitle.setPadding(pad, 0, pad, pad)
         layout.addView(subtitle)
         val value = Tools.loadLicense(this, fileName)
@@ -57,7 +55,6 @@ class LicenseActivity : Activity() {
             txt.text = value
         }
         txt.textSize = 17f
-        txt.setTextColor(Color.BLACK)
         txt.setPadding(pad, pad, pad, pad)
         txt.setBackgroundColor(Color.parseColor("#32F58801"))
         layout.addView(txt)

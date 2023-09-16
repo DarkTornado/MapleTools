@@ -103,7 +103,6 @@ public class MainActivity extends Activity {
         layout.setOrientation(1);
         TextView txt1 = new TextView(this);
         txt1.setText("캐릭터 이름 : ");
-        txt1.setTextColor(Color.BLACK);
         txt1.setTextSize(18);
         layout.addView(txt1);
         final EditText txt2 = new EditText(this);

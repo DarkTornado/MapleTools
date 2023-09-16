@@ -27,7 +27,6 @@ public class BossActivity extends Activity {
         TextView txt1 = new TextView(this);
         txt1.setText("보스 : ");
         txt1.setTextSize(18);
-        txt1.setTextColor(Color.BLACK);
         layout.addView(txt1);
         final EditText txt2 = new EditText(this);
         txt2.setHint("보스의 방어율 입력...");
@@ -37,7 +36,6 @@ public class BossActivity extends Activity {
         TextView txt3 = new TextView(this);
         txt3.setText("\n실방무 : ");
         txt3.setTextSize(18);
-        txt3.setTextColor(Color.BLACK);
         layout.addView(txt3);
         final EditText txt4 = new EditText(this);
         txt4.setHint("내 실방무 입력...");
@@ -66,7 +64,6 @@ public class BossActivity extends Activity {
         TextView maker = new TextView(this);
         maker.setText("\n© 2021-2023 Dark Tornado, All rights reserved.\n");
         maker.setTextSize(13f);
-        maker.setTextColor(Color.BLACK);
         maker.setGravity(Gravity.CENTER);
         layout.addView(maker);
 

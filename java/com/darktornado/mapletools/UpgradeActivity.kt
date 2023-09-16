@@ -22,10 +22,12 @@ class UpgradeActivity : Activity() {
 
         val hp = Switch(this)
         hp.text = "데몬 어벤져 작 계산"
+        hp.textSize = 17f
         layout.addView(hp)
 
         val txt1 = TextView(this)
         txt1.text = "부위 : "
+        txt1.textSize = 18f
         layout.addView(txt1)
         val menus = arrayOf("무기 & 보조무기 (방패 제외)", "방어구 (방패 포함, 장갑 제외)", "장갑", "장신구")
         val type = intArrayOf(0)
@@ -49,6 +51,7 @@ class UpgradeActivity : Activity() {
 
         val txt3 = TextView(this)
         txt3.text = "\n착용 레벨 제한 : "
+        txt3.textSize = 18f
         layout.addView(txt3)
         val txt4 = EditText(this)
         txt4.hint = "착용 레벨 제한 입력..."
@@ -56,6 +59,7 @@ class UpgradeActivity : Activity() {
         layout.addView(txt4)
 
         txt5.text = "\n주스탯 증가량 : "
+        txt5.textSize = 18f
         layout.addView(txt5)
         val txt6 = EditText(this)
         txt6.hint = "착용 레벨 제한 입력..."
@@ -64,6 +68,7 @@ class UpgradeActivity : Activity() {
 
         val txt7 = TextView(this)
         txt7.text = "\n업그레이드 성공 횟수 : "
+        txt7.textSize = 18f
         layout.addView(txt7)
         val txt8 = EditText(this)
         txt8.hint = "착용 레벨 제한 입력..."

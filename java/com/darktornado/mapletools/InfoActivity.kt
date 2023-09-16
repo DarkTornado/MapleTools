@@ -25,7 +25,6 @@ class InfoActivity : Activity() {
                 Tools.loadLicense(this, "license") +
                 "\n"
         txt.textSize = 18f
-        txt.setTextColor(Color.BLACK)
         layout.addView(txt);
 
         val lice = Button(this)
