@@ -117,16 +117,6 @@ class UpgradeActivity : Activity() {
         setContentView(scroll)
     }
 
-    private fun star2attack(star: Int): Double {
-        if (star > 22) return (-1).toDouble()
-        val data = intArrayOf(0,
-                0, 0, 0, 0, 1, 1, 2, 2, 3, 3,
-                4, 4, 5, 6, 7, 17, 28, 40, 53, 67,
-                82, 99
-        )
-        return data[star].toDouble()
-    }
-
     private fun weaponCalc(_diff: Int, lv: Int, hp: Boolean) {
         var diff = _diff
         if (hp) diff /= 50
