@@ -105,7 +105,7 @@ public class CharActivity extends Activity {
                         .append("</table>");
 
                 runOnUiThread(() -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (Build.VERSION.SDK_INT >= 18) {
                         web.loadDataWithBaseURL(null, result.toString(), "text/html; charset=UTF-8", null, null);
                     } else {
                         web.loadData(result.toString(), "text/html; charset=UTF-8", null);
