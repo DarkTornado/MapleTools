@@ -30,7 +30,7 @@
 * [Google Play 스토어](https://play.google.com/store/apps/details?id=com.darktornado.mapletools)
 
 ## 스크린샷
-<img src="Screenshot.png">
+![image](Screenshot.png)
 
 ## 업데이트 내역
 
