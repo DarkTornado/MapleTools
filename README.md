@@ -14,7 +14,7 @@
 * [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회
 * [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
 * 무기 추가옵션 목록
-* 메소 시세 조회
+* 메소 시세 조회 - 삭제 예정
 
 ## 개발중 & 수정중인 기능 목록
 
