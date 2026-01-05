@@ -26,6 +26,7 @@ class LicenseActivity : Activity() {
         layout.setPadding(pad, pad, pad, pad)
         val scroll = ScrollView(this)
         scroll.addView(layout)
+        Tools.preventEdgeToEdge(scroll)
         setContentView(scroll)
     }
 

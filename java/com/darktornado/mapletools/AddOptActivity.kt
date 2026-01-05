@@ -89,6 +89,7 @@ class AddOptActivity : Activity() {
         layout.addView(list)
         val pad = dip2px(16)
         layout.setPadding(pad, pad, pad, pad)
+        Tools.preventEdgeToEdge(layout)
         setContentView(layout)
     }
 

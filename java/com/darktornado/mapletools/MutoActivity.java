@@ -39,6 +39,7 @@ public class MutoActivity extends Activity {
 
         int pad = dip2px(16);
         layout.setPadding(pad, pad, pad, pad);
+        Tools.preventEdgeToEdge(layout);
         setContentView(layout);
     }
 

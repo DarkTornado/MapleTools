@@ -71,6 +71,7 @@ public class BossActivity extends Activity {
         layout.setPadding(pad, pad, pad, pad);
         ScrollView scroll = new ScrollView(this);
         scroll.addView(layout);
+        Tools.preventEdgeToEdge(scroll);
         setContentView(scroll);
     }
 

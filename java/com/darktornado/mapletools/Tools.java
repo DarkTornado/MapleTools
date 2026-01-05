@@ -1,6 +1,11 @@
 package com.darktornado.mapletools;
 
 import android.content.Context;
+import android.graphics.Insets;
+import android.os.Build;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -57,6 +62,24 @@ public class Tools {
             //toast(e.toString());
         }
         return null;
+    }
+
+    public static void preventEdgeToEdge(View view) {
+        if (Build.VERSION.SDK_INT >= 35) view.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+//                if (Build.VERSION.SDK_INT < 35) return null;
+                Insets insets = windowInsets.getInsets(WindowInsets.Type.systemBars());
+
+                ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                mlp.topMargin = insets.top;
+                mlp.bottomMargin = insets.bottom;
+                mlp.leftMargin = insets.left;
+                mlp.rightMargin = insets.right;
+
+                return WindowInsets.CONSUMED;
+            }
+        });
     }
 
 }

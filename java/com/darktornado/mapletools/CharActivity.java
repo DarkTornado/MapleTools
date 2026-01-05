@@ -80,6 +80,7 @@ public class CharActivity extends Activity {
         layout.addView(web);
         loadMapleInfo(getIntent().getStringExtra("name"), web);
         layout.setBackgroundColor(Color.WHITE);
+        Tools.preventEdgeToEdge(layout);
         setContentView(layout);
     }
 

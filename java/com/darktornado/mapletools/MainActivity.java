@@ -71,6 +71,7 @@ public class MainActivity extends Activity {
         layout.addView(web);
 
         layout.setBackgroundColor(Color.WHITE);
+        Tools.preventEdgeToEdge(layout);
         setContentView(layout);
     }
 
