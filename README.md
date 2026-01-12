@@ -28,6 +28,7 @@
   * [x] 아이템 추가옵션 목록에서 일부 아이콘이 잘못 출력되는 현상
 * [x] 메소 시세 조회 기능 삭제
 * [ ] 신규 지역 배경 이미지 만들기
+* [ ] 배고픈 무토 레시피 삭제
 
 ## 다운로드
 * [Google Play 스토어](https://play.google.com/store/apps/details?id=com.darktornado.mapletools)
