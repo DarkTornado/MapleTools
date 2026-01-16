@@ -11,7 +11,7 @@
 - 캐릭터 정보 조회 및 공유
 - [실방무 계산기](https://github.com/DarkTornado/MapleIgnoreDEFCalc)
 - 보스 방무 적용 계산기
-- [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회
+- [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회 - 삭제 예정
 - [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
 - 무기 추가옵션 목록
 - 메소 시세 조회 - 삭제 예정
