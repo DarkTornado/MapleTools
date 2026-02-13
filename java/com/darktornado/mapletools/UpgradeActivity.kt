@@ -129,22 +129,23 @@ class UpgradeActivity : Activity() {
     }
 
     private fun changeText(txt: TextView, job: Int, part: Int) {
-        //job: 일반, 제논, 데벤
-        //part: 무기, 방어구, 장신구, 장갑, 기계심장
         when (part) {
-            0, 3, 4 -> txt.text = "\n공격력/마력 증가량 : "
-            1 -> if (job == 1 || job == 2) { //제논 & 데벤져
-                txt.text = "\n최대 HP 증가량 : "
-            } else { //나머지
-                txt.text = "\n주스탯 증가량 : "
-            }
-            2 -> if (job == 1) { //제논 (올스탯 주문서 확인)
-                txt.text = "\n올스탯 증가량 : "
-            } else if (job == 2) { //데벤져
-                txt.text = "\n최대 HP 증가량 : "
-            } else { //나머지
-                txt.text = "\n주스탯 증가량 : "
-            }
+            0, 2, 4 -> //무기, 장갑, 기계심장
+                txt.text = "\n공격력/마력 증가량 : "
+            1 ->  // 방어구
+                if (job == 1 || job == 2) { //제논 & 데벤
+                    txt.text = "\n최대 HP 증가량 : "
+                } else { //나머지
+                    txt.text = "\n주스탯 증가량 : "
+                }
+            3 ->  //장신구
+                if (job == 1) { //제논 (올스탯 주문서 확인)
+                    txt.text = "\n올스탯 증가량 : "
+                } else if (job == 2) { //데벤
+                    txt.text = "\n최대 HP 증가량 : "
+                } else { //나머지
+                    txt.text = "\n주스탯 증가량 : "
+                }
         }
     }
 
