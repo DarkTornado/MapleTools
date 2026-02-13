@@ -8,8 +8,11 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
 
 class UpgradeActivity : Activity() {
+
+    private val FAILED = "주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요."
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,19 +21,20 @@ class UpgradeActivity : Activity() {
         val layout = LinearLayout(this)
         layout.orientation = 1
 
-        val txt5 = TextView(this)
-
-        val hp = Switch(this)
-        hp.text = "데몬 어벤져 작 계산"
-        hp.textSize = 17f
-        layout.addView(hp)
+        val txt0 = TextView(this)
+        txt0.text = "직업 : "
+        layout.addView(txt0)
+        val jobs = arrayOf<String?>("일반", "제논 (올스탯 주문서)", "데몬 어벤져 (체력 주문서)")
+        val spin = Spinner(this)
+        spin.adapter = ArrayAdapter<Any?>(this, android.R.layout.simple_list_item_1, jobs)
+        spin.setSelection(0)
+        spin.layoutParams = LinearLayout.LayoutParams(-1, -2)
+        layout.addView(spin)
 
         val txt1 = TextView(this)
         txt1.text = "부위 : "
-        txt1.textSize = 18f
         layout.addView(txt1)
-        val menus = arrayOf("무기 & 보조무기 (방패 제외)", "방어구 (방패 포함, 장갑 제외)", "장갑", "장신구")
-        val type = intArrayOf(0)
+        val menus = arrayOf("무기 & 보조무기 (방패 제외)", "방어구 (방패 포함, 장갑 제외)", "장갑", "장신구", "기계심장")
         val radios = RadioGroup(this)
         for (n in menus.indices) {
             val radio = RadioButton(this)
@@ -39,27 +43,18 @@ class UpgradeActivity : Activity() {
             radios.addView(radio)
             if (n == 0) radio.isChecked = true
         }
-        radios.setOnCheckedChangeListener { radioGroup: RadioGroup?, id: Int ->
-            type[0] = id
-            if (id == 2) {
-                txt5.text = "\n공격력 증가량 : "
-            } else {
-                txt5.text = "\n주스탯 증가량 : "
-            }
-        }
         layout.addView(radios)
 
         val txt3 = TextView(this)
         txt3.text = "\n착용 레벨 제한 : "
-        txt3.textSize = 18f
         layout.addView(txt3)
         val txt4 = EditText(this)
         txt4.hint = "착용 레벨 제한 입력..."
         txt4.inputType = InputType.TYPE_CLASS_NUMBER
         layout.addView(txt4)
 
-        txt5.text = "\n주스탯 증가량 : "
-        txt5.textSize = 18f
+        val txt5 = TextView(this)
+        txt5.text = "\n공격력 증가량 : "
         layout.addView(txt5)
         val txt6 = EditText(this)
         txt6.hint = "착용 레벨 제한 입력..."
@@ -68,16 +63,31 @@ class UpgradeActivity : Activity() {
 
         val txt7 = TextView(this)
         txt7.text = "\n업그레이드 성공 횟수 : "
-        txt7.textSize = 18f
         layout.addView(txt7)
         val txt8 = EditText(this)
         txt8.hint = "착용 레벨 제한 입력..."
         txt8.inputType = InputType.TYPE_CLASS_NUMBER
         layout.addView(txt8)
 
+        spin.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                changeText(txt5, id.toInt(), radios.checkedRadioButtonId)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        radios.setOnCheckedChangeListener { radioGroup: RadioGroup?, id: Int ->
+            changeText(
+                txt5,
+                spin.selectedItemId.toInt(), id
+            )
+        }
+
         val calc = Button(this)
         calc.text = "주흔작 계산"
         calc.setOnClickListener {
+            val job = spin.selectedItemId.toInt()
+            val part = radios.checkedRadioButtonId
             val level = txt4.text.toString()
             val stat = txt6.text.toString()
             val up = txt8.text.toString()
@@ -88,15 +98,15 @@ class UpgradeActivity : Activity() {
                 if (Math.rint(diff) == diff) {
                     val lv = level.toInt()
                     val dif = diff.toInt()
-                    val isDev = hp.isChecked
-                    when (type[0]) {
-                        0 -> weaponCalc(dif, lv, isDev)
-                        1 -> armorCalc(dif, lv, isDev)
+                    when (part) {
+                        0 -> weaponCalc(dif, lv)
+                        1 -> armorCalc(dif, lv, job)
                         2 -> glovesCalc(dif, lv)
-                        3 -> accessoryCalc(dif, lv, isDev)
+                        3 -> accessoryCalc(dif, lv, job)
+                        4 -> heartCalc(dif, lv)
                     }
                 } else {
-                    toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+                    toast(FAILED)
                 }
             }
         }
@@ -118,84 +128,206 @@ class UpgradeActivity : Activity() {
         setContentView(scroll)
     }
 
-    private fun weaponCalc(_diff: Int, lv: Int, hp: Boolean) {
-        var diff = _diff
-        if (hp) diff /= 50
-        if (lv <= 70) {
-            if (diff == 0) toast("100% 주문서 또는 70% 주문서가 사용되었어요")
-            else if (diff == 1) toast("30% 주문서가 사용되었어요")
-            else if (diff == 2) toast("15% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
-        } else if (lv <= 110) {
-            if (diff == 0) toast("100% 주문서가 사용되었어요")
-            else if (diff == 1) toast("70% 주문서가 사용되었어요")
-            else if (diff == 2) toast("30% 주문서가 사용되었어요")
-            else if (diff == 3) toast("15% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
-        } else {
-            if (diff == 1) toast("100% 주문서가 사용되었어요")
-            else if (diff == 2) toast("70% 주문서가 사용되었어요")
-            else if (diff == 3) toast("30% 주문서가 사용되었어요")
-            else if (diff == 4) toast("15% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+    private fun changeText(txt: TextView, job: Int, part: Int) {
+        //job: 일반, 제논, 데벤
+        //part: 무기, 방어구, 장신구, 장갑, 기계심장
+        when (part) {
+            0, 3, 4 -> txt.text = "\n공격력/마력 증가량 : "
+            1 -> if (job == 1 || job == 2) { //제논 & 데벤져
+                txt.text = "\n최대 HP 증가량 : "
+            } else { //나머지
+                txt.text = "\n주스탯 증가량 : "
+            }
+            2 -> if (job == 1) { //제논 (올스탯 주문서 확인)
+                txt.text = "\n올스탯 증가량 : "
+            } else if (job == 2) { //데벤져
+                txt.text = "\n최대 HP 증가량 : "
+            } else { //나머지
+                txt.text = "\n주스탯 증가량 : "
+            }
         }
     }
 
-    private fun armorCalc(diff: Int, lv: Int, hp: Boolean) {
-        var value = arrayOf(intArrayOf(1, 2, 3), intArrayOf(2, 3, 5), intArrayOf(3, 4, 7))
-        if (hp) value = arrayOf(intArrayOf(55, 115, 180), intArrayOf(120, 190, 320), intArrayOf(180, 270, 470))
+    private fun weaponCalc(diff: Int, lv: Int) {
         if (lv <= 70) {
-            if (diff == value[0][0]) toast("100% 주문서가 사용되었어요")
-            else if (diff == value[0][1]) toast("70% 주문서가 사용되었어요")
-            else if (diff == value[0][2]) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            if (diff == 1) toast("100% 주문서가 사용되었어요")
+            else if (diff == 2) toast("70% 주문서가 사용되었어요")
+            else if (diff == 3) toast("30% 주문서가 사용되었어요")
+            else if (diff == 5) toast("15% 주문서가 사용되었어요")
+            else toast(FAILED)
         } else if (lv <= 110) {
-            if (diff == value[1][0]) toast("100% 주문서가 사용되었어요")
-            else if (diff == value[1][1]) toast("70% 주문서가 사용되었어요")
-            else if (diff == value[1][2]) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            if (diff == 2) toast("100% 주문서가 사용되었어요")
+            else if (diff == 3) toast("70% 주문서가 사용되었어요")
+            else if (diff == 5) toast("30% 주문서가 사용되었어요")
+            else if (diff == 7) toast("15% 주문서가 사용되었어요")
+            else toast(FAILED)
         } else {
-            if (diff == value[2][0]) toast("100% 주문서가 사용되었어요")
-            else if (diff == value[2][1]) toast("70% 주문서가 사용되었어요")
-            else if (diff == value[2][2]) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            if (diff == 3) toast("100% 주문서가 사용되었어요")
+            else if (diff == 5) toast("70% 주문서가 사용되었어요")
+            else if (diff == 7) toast("30% 주문서가 사용되었어요")
+            else if (diff == 9) toast("15% 주문서가 사용되었어요")
+            else toast(FAILED)
+        }
+    }
+
+    private fun armorCalc(diff: Int, lv: Int, job: Int) {
+        //주스탯으로 확인
+        if (job == 0) {
+            if (lv <= 70) {
+                if (diff == 1) toast("100% 주문서가 사용되었어요")
+                else if (diff == 2) toast("70% 주문서가 사용되었어요")
+                else if (diff == 3) toast("30% 주문서가 사용되었어요")
+                else if (diff == 4) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            } else if (lv <= 115) {
+                if (diff == 2) toast("100% 주문서가 사용되었어요")
+                else if (diff == 3) toast("70% 주문서가 사용되었어요")
+                else if (diff == 5) toast("30% 주문서가 사용되었어요")
+                else if (diff == 7) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            } else {
+                if (diff == 3) toast("100% 주문서가 사용되었어요")
+                else if (diff == 4) toast("70% 주문서가 사용되었어요")
+                else if (diff == 7) toast("30% 주문서가 사용되었어요")
+                else if (diff == 10) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            }
+        }
+
+        //체력 증가로 확인 - 제논
+        else if (job == 1) {
+            if (lv <= 70) {
+                if (diff == 30) toast("30% 주문서가 사용되었어요")
+                else if (diff == 45) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            } else if (lv <= 115) {
+                if (diff == 70) toast("30% 주문서가 사용되었어요")
+                else if (diff == 110) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            } else {
+                if (diff == 120) toast("30% 주문서가 사용되었어요")
+                else if (diff == 170) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            }
+        }
+
+        //체력 증가로 확인 - 데벤
+        else {
+            if (lv <= 70) {
+                if (diff == 55) toast("100% 주문서가 사용되었어요")
+                else if (diff == 115) toast("70% 주문서가 사용되었어요")
+                else if (diff == 180) toast("30% 주문서가 사용되었어요")
+                else if (diff == 245) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            } else if (lv <= 115) {
+                if (diff == 120) toast("100% 주문서가 사용되었어요")
+                else if (diff == 190) toast("70% 주문서가 사용되었어요")
+                else if (diff == 320) toast("30% 주문서가 사용되었어요")
+                else if (diff == 460) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            } else {
+                if (diff == 180) toast("100% 주문서가 사용되었어요")
+                else if (diff == 270) toast("70% 주문서가 사용되었어요")
+                else if (diff == 470) toast("30% 주문서가 사용되었어요")
+                else if (diff == 670) toast("15% 주문서가 사용되었어요")
+                else toast(FAILED)
+            }
         }
     }
 
     private fun glovesCalc(diff: Int, lv: Int) {
         if (lv <= 70) {
-            if (diff == 0) toast("100% 주문서가 사용되었어요?")
+            if (diff == 0) toast("100% 주문서가 사용된 것 같아요")
             else if (diff == 1) toast("70% 주문서가 사용되었어요")
             else if (diff == 2) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            else if (diff == 3) toast("15% 주문서가 사용되었어요")
+            else toast(FAILED)
         } else {
             if (diff == 1) toast("100% 주문서가 사용되었어요")
             else if (diff == 2) toast("70% 주문서가 사용되었어요")
             else if (diff == 3) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+            else if (diff == 4) toast("15% 주문서가 사용되었어요")
+            else toast(FAILED)
         }
     }
 
-    private fun accessoryCalc(diff: Int, lv: Int, hp: Boolean) {
-        var value = arrayOf(intArrayOf(1, 2, 3), intArrayOf(1, 2, 4), intArrayOf(2, 3, 5))
-        if (hp) value = arrayOf(intArrayOf(50, 100, 150), intArrayOf(50, 100, 200), intArrayOf(100, 150, 250))
-        if (lv <= 70) {
-            if (diff == value[0][0]) toast("100% 주문서가 사용되었어요")
-            else if (diff == value[0][1]) toast("70% 주문서가 사용되었어요")
-            else if (diff == value[0][2]) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
-        } else if (lv <= 110) {
-            if (diff == value[1][0]) toast("100% 주문서가 사용되었어요")
-            else if (diff == value[1][1]) toast("70% 주문서가 사용되었어요")
-            else if (diff == value[1][2]) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
-        } else {
-            if (diff == value[2][0]) toast("100% 주문서가 사용되었어요")
-            else if (diff == value[2][1]) toast("70% 주문서가 사용되었어요")
-            else if (diff == value[2][2]) toast("30% 주문서가 사용되었어요")
-            else toast("주흔작 계산에 실패했어요.\n작이 섞여있거나 주문의 흔적이 아닌 다른 주문서도 사용한 것 같아요.")
+    private fun accessoryCalc(diff: Int, lv: Int, job: Int) {
+        //주스탯으로 확인
+        if (job == 0) {
+            if (lv <= 70) {
+                if (diff == 1) toast("100% 주문서가 사용되었어요");
+                else if (diff == 2) toast("70% 주문서가 사용되었어요");
+                else if (diff == 3) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            } else if (lv <= 115) {
+                if (diff == 1) toast("100% 주문서가 사용되었어요");
+                else if (diff == 2) toast("70% 주문서가 사용되었어요");
+                else if (diff == 4) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            } else {
+                if (diff == 2) toast("100% 주문서가 사용되었어요");
+                else if (diff == 3) toast("70% 주문서가 사용되었어요");
+                else if (diff == 5) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            }
+        }
+
+        //올스탯 증가로 확인 - 제논
+        else if (job == 1) {
+            if (lv <= 70) {
+                if (diff == 1) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            } else if (lv <= 115) {
+                if (diff == 2) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            } else {
+                if (diff == 3) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            }
+        }
+
+        //체력 증가로 확인 - 데벤
+        else {
+            if (lv <= 70) {
+                if (diff == 50) toast("100% 주문서가 사용되었어요");
+                else if (diff == 100) toast("70% 주문서가 사용되었어요");
+                else if (diff == 150) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            } else if (lv <= 115) {
+                if (diff == 50) toast("100% 주문서가 사용되었어요");
+                else if (diff == 100) toast("70% 주문서가 사용되었어요");
+                else if (diff == 200) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            } else {
+                if (diff == 100) toast("100% 주문서가 사용되었어요");
+                else if (diff == 150) toast("70% 주문서가 사용되었어요");
+                else if (diff == 250) toast("30% 주문서가 사용되었어요");
+                else toast(FAILED);
+            }
         }
     }
+
+    private fun heartCalc(diff: Int, lv: Int) {
+        if (diff == 9) {
+            toast("스페셜 하트 공격력/마력 주문서가 사용된 것 같아요");
+        } else if (lv <= 30) {
+            if (diff == 1) toast("100% 주문서가 사용되었어요");
+            else if (diff == 2) toast("70% 주문서가 사용되었어요");
+            else if (diff == 3) toast("30% 주문서가 사용되었어요");
+            else toast(FAILED);
+        } else if (lv <= 100) {
+            if (diff == 2) toast("100% 주문서가 사용되었어요");
+            else if (diff == 3) toast("70% 주문서가 사용되었어요");
+            else if (diff == 5) toast("30% 주문서가 사용되었어요");
+            else toast(FAILED);
+        } else {
+            if (diff == 3) toast("100% 주문서가 사용되었어요");
+            else if (diff == 4) toast("70% 주문서가 사용되었어요");
+            else if (diff == 7) toast("30% 주문서가 사용되었어요");
+            else toast(FAILED);
+        }
+    }
+
 
     private fun showDialog(title: String, msg: String) {
         try {
