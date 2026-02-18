@@ -104,7 +104,7 @@ class AddOptActivity : Activity() {
                 data.add("<meta name='viewport' content='user-scalable=no width=device-width' />" +
                         "<style>td{padding:5px;}table{border: 1px solid #000000;border-collapse: collapse;}</style>" +
                         "<table width=100% border=1>" +
-                        "<tr align=center><td width=20% bgcolor=#EEEEEE><b>종류</b></td><td colspan=2 width=40%>" + datum[0] + "</td><td width=20% bgcolor=#EEEEEE><b>공격력</b></td><td width=20%>" + datum[7] + "</td></tr>" +
+                        "<tr align=center><td width=20% bgcolor=#EEEEEE><b>종류</b></td><td colspan=2 width=40%>" + datum[0] + "</td><td width=20% bgcolor=#EEEEEE><b>공/마</b></td><td width=20%>" + datum[7] + "</td></tr>" +
                         "<tr align=center bgcolor=#EEEEEE><td><b>1추</b></td><td><b>2추</b></td><td><b>3추</b></td><td><b>4추</b></td><td><b>5추</b></td></tr>" +
                         "<tr align=center><td>" + datum[2] + "</td><td>" + datum[3] + "</td><td>" + datum[4] + "</td><td>" + datum[5] + "</td><td>" + datum[6] + "</td></tr>" +
                         "<table>")
