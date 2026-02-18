@@ -34,10 +34,6 @@
             android:configChanges="orientation|screenSize"
             android:label="메이플 도구 - 보스 방무 적용 계산기" />
         <activity
-            android:name=".MutoActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="메이플 도구 - 배고픈 무토 레시피" />
-        <activity
             android:name=".UpgradeActivity"
             android:configChanges="orientation|screenSize"
             android:label="메이플 도구 - 주문의 흔적 계산기" />

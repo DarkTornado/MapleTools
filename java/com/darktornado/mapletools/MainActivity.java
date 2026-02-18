@@ -87,13 +87,13 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, BossActivity.class));
                 break;
             case 3:
-                startActivity(new Intent(this, MutoActivity.class));
-                break;
-            case 4:
                 startActivity(new Intent(this, UpgradeActivity.class));
                 break;
-            case 5:
+            case 4:
                 startActivity(new Intent(this, AddOptActivity.class));
+                break;
+            case 5:
+                startActivity(new Intent(this, InfoActivity.class));
                 break;
         }
     }
