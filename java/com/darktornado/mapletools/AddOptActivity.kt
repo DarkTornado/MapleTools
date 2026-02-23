@@ -118,7 +118,7 @@ class AddOptActivity : Activity() {
 
     private fun loadIcon(index: Int, type: String): Drawable? {
         try {
-            val types = arrayOf("One-handedSword", "One-handedAxe", "One-handedBluntWeapon", "Two-handedSword", "Two-handedAxe", "Two-handedBluntWeapon", "Spear", "Polearm", "Desperado", "ArmCannon", "Bladecaster", "Wand", "Staff", "ShiningRod", "Psy-limiter", "LucentGauntlet", "Bow", "CrowssBow", "AncientBow", "DualBowguns", "Whispershot", "Claw", "Dagger", "Cane", "Chain", "RitualFan", "Chakram", "WhipBlade", "Knuckle", "Gun", "HandCannon", "SoulShooter")
+            val types = arrayOf("One-handedSword", "One-handedAxe", "One-handedBluntWeapon", "Two-handedSword", "Two-handedAxe", "Two-handedBluntWeapon", "Spear", "Polearm", "Desperado", "ArmCannon", "Bladecaster", "Sword", "Wand", "Staff", "ShiningRod", "Psy-limiter", "LucentGauntlet", "Bow", "CrowssBow", "AncientBow", "DualBowguns", "Whispershot", "Claw", "Dagger", "Cane", "Chain", "RitualFan", "Chakram", "WhipBlade", "Knuckle", "Gun", "HandCannon", "SoulShooter")
             val am = this.assets
             val `is` = am.open("images/weapons/" + types[index] + "_" + type + ".png")
             val bitmap = BitmapFactory.decodeStream(`is`)
