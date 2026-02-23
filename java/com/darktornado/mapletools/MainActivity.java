@@ -18,13 +18,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 public class MainActivity extends Activity {
 
     private WebView web;
