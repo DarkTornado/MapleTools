@@ -11,25 +11,13 @@
 - 캐릭터 정보 조회 및 공유
 - [실방무 계산기](https://github.com/DarkTornado/MapleIgnoreDEFCalc)
 - 보스 방무 적용 계산기
-- [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회 - 삭제 예정
 - [주문의 흔적](https://maplestory.nexon.com/Guide/GameInformation/ItemEnhancement/Upgrade) 강화 계산기
+  - STR/INT/DEX/LUK 강화 주문서, 올스탯 강화 주문서, 체력 강화 주문서
 - 무기 추가옵션 목록
-- 메소 시세 조회 - 삭제 예정
 
-## 개발중 & 수정중인 기능 목록
-- [x] 작 계산기 리메이크 - 아예 다시 만들기
-  - [x] 일반 직업들
-  - [x] 제논
-  - [x] 데몬 어벤져
-- [x] 차크람 추가옵션 추가
-- [x] 장검 추가옵션 추가
-- [x] 보스 방무 적용 계산기 기능 수정
-- [x] 버그 수정
-  - [x] 아이템 추가옵션 목록에서 일부 아이콘이 잘못 출력되는 현상
-- [x] 메소 시세 조회 기능 삭제
-- [x] 신규 지역 배경 이미지 만들기
-- [x] 배고픈 무토 레시피 삭제
-- [x] 토스트 메시지 스타일 설정
+### 삭제된 기능 목록
+- [배고픈 무토](https://m.maplestory.nexon.com/Guide/GameInformation/SpecialContents/ArcaneRiverSpecial#3) 레시피 목록 조회
+- 메소 시세 조회
 
 ## 다운로드
 - [Google Play 스토어](https://play.google.com/store/apps/details?id=com.darktornado.mapletools)
@@ -38,6 +26,13 @@
 ![image](Screenshot.png)
 
 ## 업데이트 내역
+
+### 버전 3.0
+ - 주흔작 계산기 리메이크 및 제논&데벤져 작 계산 지원
+ - 보스 방무 적용 계산기 기능 축소
+ - 무기 추가옵션 목록에 차크람&장금 추가
+ - 배고픈 무토 레시피 삭제, 메소 시세 조회 기능 삭제
+ - 커스텀 토스트로 변경
 
 ### 버전 2.0
 - 주흔작 계산기 추가
