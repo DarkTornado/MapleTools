@@ -62,7 +62,7 @@ public class BossActivity extends Activity {
         layout.addView(inde);
 
         TextView maker = new TextView(this);
-        maker.setText("\n© 2021-2023 Dark Tornado, All rights reserved.\n");
+        maker.setText("\n© 2021-2026 Dark Tornado, All rights reserved.\n");
         maker.setTextSize(13f);
         maker.setGravity(Gravity.CENTER);
         layout.addView(maker);
@@ -98,6 +98,6 @@ public class BossActivity extends Activity {
     }
 
     public void toast(final String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Tools.toast(this, msg);
     }
 }

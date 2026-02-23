@@ -342,7 +342,7 @@ class UpgradeActivity : Activity() {
         }
     }
 
-    fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+    fun toast(msg: String) = Tools.toast(this, msg)
 
     fun dip2px(dips: Int) = Math.ceil((dips * this.resources.displayMetrics.density).toDouble()).toInt()
 

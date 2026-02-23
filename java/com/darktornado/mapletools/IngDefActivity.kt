@@ -70,7 +70,7 @@ class IngDefActivity : Activity() {
         layout.addView(info)
 
         val maker = TextView(this)
-        maker.text = "\n© 2021-2023 Dark Tornado, All rights reserved.\n"
+        maker.text = "\n© 2021-2026 Dark Tornado, All rights reserved.\n"
         maker.textSize = 13f
         maker.gravity = Gravity.CENTER
         layout.addView(maker)
@@ -102,7 +102,7 @@ class IngDefActivity : Activity() {
         dialog.show()
     }
 
-    fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+    fun toast(msg: String) = Tools.toast(this, msg)
 
     fun dip2px(dips: Int) = Math.ceil((dips * this.resources.displayMetrics.density).toDouble()).toInt()
 

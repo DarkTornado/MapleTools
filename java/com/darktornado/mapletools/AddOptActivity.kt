@@ -191,7 +191,5 @@ class AddOptActivity : Activity() {
         return Math.ceil(dips * this.resources.displayMetrics.density.toDouble()).toInt()
     }
 
-    fun toast(msg: String?) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
+    fun toast(msg: String?) = Tools.toast(this, msg);
 }

@@ -135,7 +135,7 @@ public class MainActivity extends Activity {
     }
 
     public void toast(final String msg) {
-        runOnUiThread(() -> Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show());
+        runOnUiThread(() -> Tools.toast(this, msg));
     }
 
     private class JSLinker {

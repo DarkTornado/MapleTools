@@ -1,11 +1,14 @@
 package com.darktornado.mapletools;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Insets;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -80,6 +83,24 @@ public class Tools {
                 return WindowInsets.CONSUMED;
             }
         });
+    }
+
+    private static int dip2px(Context ctx, int dips) {
+        return (int) Math.ceil(dips * ctx.getResources().getDisplayMetrics().density);
+    }
+
+    public static void toast(Context ctx, String msg) {
+        Toast toast = new Toast(ctx);
+        TextView txt = new TextView(ctx);
+        txt.setText(msg);
+        txt.setTextSize(16);
+        txt.setTextColor(Color.WHITE);
+        txt.setBackgroundColor(Color.argb(160, 20, 20, 20));
+        int pad = dip2px(ctx, 8);
+        txt.setPadding(pad, pad, pad, pad);
+        toast.setView(txt);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 }

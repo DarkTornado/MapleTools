@@ -328,7 +328,7 @@ public class CharActivity extends Activity {
     }
 
     public void toast(final String msg) {
-        runOnUiThread(() -> Toast.makeText(CharActivity.this, msg, Toast.LENGTH_SHORT).show());
+        runOnUiThread(() -> Tools.toast(this, msg));
     }
 
 
